@@ -1,5 +1,7 @@
 import pygame
 from math import sin, cos, pi
+import py3d
+
 
 size = [600, 600]
 CENTER = (size[0] / 2, size[1] / 2, 0)

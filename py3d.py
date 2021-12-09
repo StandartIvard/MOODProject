@@ -2,7 +2,6 @@ from math import sin, cos
 
 size = [600, 600]
 CENTER = (size[0] / 2, size[1] / 2, 0)
-h = 50
 
 
 class Camera:
