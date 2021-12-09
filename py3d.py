@@ -80,6 +80,8 @@ def mc(p1, cam):
         x = p[0] - cam.pos[0]
         y = p[1] - cam.pos[1]
         z = p[2] - cam.pos[2]
+        if z < 0:
+            return [(-1, -1), (-1, -1), (-1, -1), (-1, -1)]
         cur_p = (x, y, z)
         cur_p = remake_h(cur_p, -cam.ang_h, (0, 0, 0))
         cur_p = remake_s(cur_p, -cam.ang_s, (0, 0, 0))
@@ -90,8 +92,6 @@ def mc(p1, cam):
         cur_field = remake_s(cur_field, -cam.ang_s, (0, 0, 0))
         cur_field = remake_v(cur_field, -cam.ang_v, (0, 0, 0))
         cur_field = remake_h(cur_field, -cam.ang_h, (0, 0, 0))
-        if cur_p[2] < 0:
-            return [(-1, -1), (-1, -1), (-1, -1), (-1, -1)]
         coefficient = cur_field[2] / cur_p[2]
         x = cur_p[0] * coefficient
         y = cur_p[1] * coefficient

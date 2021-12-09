@@ -1,5 +1,5 @@
 import pygame
-from math import sin, cos, pi
+from math import pi
 from py3d import Camera, size, remake_s, remake_h, remake_v, dist, polygon_center, mc
 
 h = 50
@@ -26,12 +26,26 @@ if __name__ == '__main__':
     screen.fill((0, 0, 0))
     running = True
     camera = Camera((0, 0, -(3**0.5) * 150 - 600), (0, 0, -600))
-    p11 = (-100, -100, -100)
-    p22 = (-120, -100, -100)
-    p33 = (-120, -120, -100)
-    p44 = (-100, -120, -100)
+    terrain = []
+    p11 = (100, 100, -1000)
+    p22 = (100, 0, -1000)
+    p33 = (0, 0, -1000)
+    p44 = (0, 100, -1000)
+    for i in range(0, 20):
+        for j in range(0, 20):
+            c = (i * 50 - 500, -100, j * 50 - 500)
+            c1 = (c[0] + 50, -100, c[2])
+            c2 = (c[0] + 50, -100, c[2] + 50)
+            c3 = (c[0], -100, c[2] + 50)
+            terrain.append([c, c1, c2, c3])
     while running:
-        pygame.draw.polygon(screen, clr1, mc([p11, p22, p33, p44], camera))
+        #pygame.draw.polygon(screen, clr1, mc([p11, p22, p33, p44], camera))
+        for t in terrain:
+            sqear = mc(t, camera)
+            if sqear[0] == (-1, -1) and sqear[3] == (-1, -1):
+                print(sqear)
+            else:
+                pygame.draw.polygon(screen, clr1, sqear)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
