@@ -80,8 +80,9 @@ def mc(p1, cam):
         x = p[0] - cam.pos[0]
         y = p[1] - cam.pos[1]
         z = p[2] - cam.pos[2]
-        if z < 0:
-            return [(-1, -1), (-1, -1), (-1, -1), (-1, -1)]
+        """if z < 0:
+            ans = [(-1, -1), (-1, -1), (-1, -1), (-1, -1)]
+            break"""
         cur_p = (x, y, z)
         cur_p = remake_h(cur_p, -cam.ang_h, (0, 0, 0))
         cur_p = remake_s(cur_p, -cam.ang_s, (0, 0, 0))
