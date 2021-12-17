@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="cursor">
-   <cursorShape>CrossCursor</cursorShape>
+   <cursorShape>ArrowCursor</cursorShape>
   </property>
   <property name="windowTitle">
    <string>Form</string>
@@ -84,6 +84,9 @@
     <font>
      <pointsize>24</pointsize>
     </font>
+   </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
    </property>
    <property name="styleSheet">
     <string notr="true">color: rgb(255, 255, 255);
@@ -208,6 +211,9 @@ background-color: rgb(0, 0, 40);</string>
      <pointsize>24</pointsize>
     </font>
    </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
    <property name="styleSheet">
     <string notr="true">color: rgb(255, 255, 255);
 background-color: rgb(40, 0, 0);
@@ -219,7 +225,7 @@ background-color: rgb(40, 0, 0);
   </widget>
  </widget>
  <resources>
-  <include location="../MOOD.qrc"/>
+  <include location="images/MOOD.qrc"/>
   <include location="images/MOOD.qrc"/>
  </resources>
  <connections/>
