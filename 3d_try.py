@@ -11,7 +11,6 @@ from uniAlertDialog import alertDialog
 h = 50
 chk = False
 
-
 class Game:
     def __init__(self):
         pygame.init()
@@ -154,7 +153,7 @@ class Window(MainMenu, QWidget):
             self.lineEdit_3.setText("")
 
         elif password1 != password2:
-            alert = alertDialog("Введённые парли не совпадают")
+            alert = alertDialog("Введённые пароли не совпадают")
             alert.exec_()
             self.lineEdit_4.setText("")
             self.lineEdit_5.setText("")
