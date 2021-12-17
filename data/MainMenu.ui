@@ -91,7 +91,7 @@ background-color: rgb(40, 0, 0);
 </string>
    </property>
    <property name="text">
-    <string>Войти</string>
+    <string>Играть</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="lineEdit">

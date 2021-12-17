@@ -6,7 +6,7 @@ from PyQt5.uic import loadUi
 
 
 class MainMenu(QWidget):
-    def __init__(self, parent=None):
+    def __init__(self, game, parent=None):
         super().__init__(parent)
         loadUi(".//data/MainMenu.ui", self)
 
@@ -20,9 +20,22 @@ class MainMenu(QWidget):
         self.setPalette(palette)
         self.show()
 
+        self.pushButton_2.clicked.connect(self.play)
+        self.pushButton_3.clicked.connect(self.register)
+        self.init_pygame(game)
 
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    ex = MainMenu()
-    ex.show()
-    sys.exit(app.exec_())
+    def init_pygame(self, game):
+        self.game = game
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.pygame_loop)
+        self.timer.start(0)
+
+    def pygame_loop(self):
+        if self.game.main_loop(self):
+            self.close()
+
+    def play(self):
+        pass
+
+    def register(self):
+        pass
