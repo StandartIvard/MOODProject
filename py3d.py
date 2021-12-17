@@ -11,6 +11,13 @@ class Camera:
         self.ang_v = ang_vert
         self.ang_h = ang_hor
         self.ang_s = ang_st
+        self.cur_field = field
+        self.cur_field = (self.field[0] - self.pos[0],
+                     self.field[1] - self.pos[1],
+                     self.field[2] - self.pos[2])
+        self.cur_field = remake_s(self.cur_field, -self.ang_s, (0, 0, 0))
+        self.cur_field = remake_v(self.cur_field, -self.ang_v, (0, 0, 0))
+        self.cur_field = remake_h(self.cur_field, -self.ang_h, (0, 0, 0))
 
     def turn_h(self, rad):
         self.field = remake_h(self.field, rad, self.pos)
@@ -76,26 +83,27 @@ def remake_s(p, rad, c):
 
 def mc(p1, cam):
     ans = []
+    pc = []
     for p in p1:
         x = p[0] - cam.pos[0]
         y = p[1] - cam.pos[1]
         z = p[2] - cam.pos[2]
-        """if z < 0:
-            ans = [(-1, -1), (-1, -1), (-1, -1), (-1, -1)]
-            break"""
         cur_p = (x, y, z)
         cur_p = remake_h(cur_p, -cam.ang_h, (0, 0, 0))
         cur_p = remake_s(cur_p, -cam.ang_s, (0, 0, 0))
         cur_p = remake_v(cur_p, -cam.ang_v, (0, 0, 0))
-        cur_field = (cam.field[0] - cam.pos[0],
-                     cam.field[1] - cam.pos[1],
-                     cam.field[2] - cam.pos[2])
-        cur_field = remake_s(cur_field, -cam.ang_s, (0, 0, 0))
-        cur_field = remake_v(cur_field, -cam.ang_v, (0, 0, 0))
-        cur_field = remake_h(cur_field, -cam.ang_h, (0, 0, 0))
-        coefficient = cur_field[2] / cur_p[2]
+        cur_field = cam.cur_field
+        if cur_p[2] < 0 or dist(cur_p, (0, 0, 0)) < 10:
+            return [(1, 1), (1, 1), (1, 1), (1, 1)]
+        try:
+            coefficient = cur_field[2] / cur_p[2]
+        except ZeroDivisionError:
+            return [(1, 1), (1, 1), (1, 1), (1, 1)]
         x = cur_p[0] * coefficient
         y = cur_p[1] * coefficient
+        pc.append((x, y, 0))
         y = size[1] - y
         ans.append((x + CENTER[0], y - CENTER[1]))
+    if dist(polygon_center(pc), (0, 0, 0)) > (2**0.5) * 500:
+        return [(1, 1), (1, 1), (1, 1), (1, 1)]
     return ans
