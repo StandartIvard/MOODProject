@@ -104,6 +104,6 @@ def mc(p1, cam):
         pc.append((x, y, 0))
         y = size[1] - y
         ans.append((x + CENTER[0], y - CENTER[1]))
-    if dist(polygon_center(pc), (0, 0, 0)) > (2**0.5) * 500:
+    if dist(polygon_center(pc), (0, 0, 0)) > (2**0.5) * 600:
         return [(1, 1), (1, 1), (1, 1), (1, 1)]
     return ans
