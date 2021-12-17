@@ -40,7 +40,7 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>48</pointsize>
+     <pointsize>45</pointsize>
     </font>
    </property>
    <property name="styleSheet">
@@ -61,7 +61,7 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>48</pointsize>
+     <pointsize>45</pointsize>
     </font>
    </property>
    <property name="styleSheet">
@@ -82,7 +82,7 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>24</pointsize>
+     <pointsize>21</pointsize>
     </font>
    </property>
    <property name="styleSheet">
@@ -205,7 +205,7 @@ background-color: rgb(0, 0, 40);</string>
    </property>
    <property name="font">
     <font>
-     <pointsize>24</pointsize>
+     <pointsize>21</pointsize>
     </font>
    </property>
    <property name="styleSheet">

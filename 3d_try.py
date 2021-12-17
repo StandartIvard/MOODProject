@@ -56,7 +56,6 @@ class Game:
 
     def main_loop(self, window):
         global chk
-        print('ok')
         if chk:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
