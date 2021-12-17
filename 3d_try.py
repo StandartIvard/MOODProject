@@ -5,106 +5,111 @@ from time import time
 
 h = 50
 
-if __name__ == '__main__':
-    w = 0.05
-    c = (0, 0, 0)
-    p1 = (0, 0, 0)
-    p2 = (h, 0, 0)
-    p3 = (h, 0, h)
-    p4 = (0, 0, h)
-    p5 = (0, h, 0)
-    p6 = (h, h, 0)
-    p7 = (h, h, h)
-    p8 = (0, h, h)
-    clr1 = pygame.Color('red')
-    clr2 = pygame.Color('green')
-    clr3 = pygame.Color('blue')
-    clr4 = pygame.Color('white')
-    clr5 = pygame.Color('yellow')
-    clr6 = pygame.Color('pink')
-    pygame.init()
-    screen = pygame.display.set_mode(size)
-    screen.fill((0, 0, 0))
-    running = True
-    camera = Camera((0, 0, -(3**0.5) * 150 - 600), (0, 0, -600))
-    terrain = []
-    p11 = (100, 100, 500)
-    p22 = (100, 0, 500)
-    p33 = (0, 0, 500)
-    p44 = (0, 100, 500)
-    for i in range(0, 20):
-        for j in range(0, 20):
-            c = (i * 50 - 500, -100, j * 50 - 500)
-            c1 = (c[0] + 50, -100, c[2])
-            c2 = (c[0] + 50, -100, c[2] + 50)
-            c3 = (c[0], -100, c[2] + 50)
-            terrain.append(([c, c1, c2, c3], dist(camera.pos, polygon_center([c, c1, c2, c3])), clr2))
-    plane_map = []
-    plane_map.extend(terrain)
-    cube = [([p1, p5, p6, p2], dist(camera.pos, polygon_center([p1, p5, p6, p2])), clr1),
-            ([p4, p8, p7, p3], dist(camera.pos, polygon_center([p4, p8, p7, p3])), clr2),
-            ([p1, p5, p8, p4], dist(camera.pos, polygon_center([p1, p5, p8, p4])), clr3),
-            ([p2, p6, p7, p3], dist(camera.pos, polygon_center([p2, p6, p7, p3])), clr4),
-            ([p1, p2, p3, p4], dist(camera.pos, polygon_center([p1, p2, p3, p4])), clr5),
-            ([p5, p6, p7, p8], dist(camera.pos, polygon_center([p5, p6, p7, p8])), clr6)]
-    spaced = 0
-    while running:
+
+class Game:
+    def __init__(self):
+        pygame.init()
+        self.game_init()
+
+    def game_init(self):
+        self.w = 0.05
+        self.p1 = (0, 0, 0)
+        self.p2 = (h, 0, 0)
+        self.p3 = (h, 0, h)
+        self.p4 = (0, 0, h)
+        self.p5 = (0, h, 0)
+        self.p6 = (h, h, 0)
+        self.p7 = (h, h, h)
+        self.p8 = (0, h, h)
+        self.clr1 = pygame.Color('red')
+        self.clr2 = pygame.Color('green')
+        self.clr3 = pygame.Color('blue')
+        self.clr4 = pygame.Color('white')
+        self.clr5 = pygame.Color('yellow')
+        self.clr6 = pygame.Color('pink')
+        self.screen = pygame.display.set_mode(size)
+        self.screen.fill((0, 0, 0))
+        self.running = True
+        self.camera = Camera((0, 0, -(3**0.5) * 150 - 600), (0, 0, -600))
+        self.terrain = []
+        for i in range(0, 20):
+            for j in range(0, 20):
+                c = (i * 50 - 500, -100, j * 50 - 500)
+                c1 = (c[0] + 50, -100, c[2])
+                c2 = (c[0] + 50, -100, c[2] + 50)
+                c3 = (c[0], -100, c[2] + 50)
+                self.terrain.append(([c, c1, c2, c3], dist(self.camera.pos, polygon_center([c, c1, c2, c3])), self.clr2))
+        self.plane_map = []
+        self.plane_map.extend(self.terrain)
+        self.cube = [([self.p1, self.p5, self.p6, self.p2], dist(self.camera.pos, polygon_center([self.p1, self.p5, self.p6, self.p2])), self.clr1),
+                    ([self.p4, self.p8, self.p7, self.p3], dist(self.camera.pos, polygon_center([self.p4, self.p8, self.p7, self.p3])), self.clr2),
+                    ([self.p1, self.p5, self.p8, self.p4], dist(self.camera.pos, polygon_center([self.p1, self.p5, self.p8, self.p4])), self.clr3),
+                    ([self.p2, self.p6, self.p7, self.p3], dist(self.camera.pos, polygon_center([self.p2, self.p6, self.p7, self.p3])), self.clr4),
+                    ([self.p1, self.p2, self.p3, self.p4], dist(self.camera.pos, polygon_center([self.p1, self.p2, self.p3, self.p4])), self.clr5),
+                    ([self.p5, self.p6, self.p7, self.p8], dist(self.camera.pos, polygon_center([self.p5, self.p6, self.p7, self.p8])), self.clr6)]
+
+    def main_loop(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                self.running = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_w:
-                    camera.move((0, 0, 100))
+                    self.camera.move((0, 0, 100))
                 if event.key == pygame.K_a:
-                    camera.move((-100, 0, 0))
+                    self.camera.move((-100, 0, 0))
                 if event.key == pygame.K_d:
-                    camera.move((100, 0, 0))
+                    self.camera.move((100, 0, 0))
                 if event.key == pygame.K_x:
-                    camera.move((0, 10, 0))
+                    self.camera.move((0, 10, 0))
                 if event.key == pygame.K_s:
-                    camera.move((0, 0, -100))
+                    self.camera.move((0, 0, -100))
                 if event.key == pygame.K_z:
-                    camera.turn_v(pi / 12)
+                    self.camera.turn_v(pi / 12)
                 if event.key == pygame.K_c:
-                    camera.turn_v(-pi / 12)
+                    self.camera.turn_v(-pi / 12)
                 if event.key == pygame.K_r:
-                    camera.turn_h(pi / 12)
+                    self.camera.turn_h(pi / 12)
                 if event.key == pygame.K_f:
-                    camera.turn_h(-pi / 12)
-                if event.key == pygame.K_SPACE:
-                    spaced = 1
-        hole_points = []
-        hole_points.extend(cube)
-        hole_points.extend(plane_map)
-        hole_points.sort(key=lambda x: -x[1])
-        for point in hole_points:
-            square = mc(point[0], camera)
+                    self.camera.turn_h(-pi / 12)
+        self.hole_points = []
+        self.hole_points.extend(self.cube)
+        self.hole_points.extend(self.plane_map)
+        self.hole_points.sort(key=lambda x: -x[1])
+        for point in self.hole_points:
+            square = mc(point[0], self.camera)
             if square != [(1, 1), (1, 1), (1, 1), (1, 1)]:
-                pygame.draw.polygon(screen, point[2], square)
-        pygame.draw.circle(screen, pygame.Color('red'), mc([(0, 0, 0)], camera)[0], 5)
+                pygame.draw.polygon(self.screen, point[2], square)
+        pygame.draw.circle(self.screen, pygame.Color('red'), mc([(0, 0, 0)], self.camera)[0], 5)
         pygame.display.flip()
-        screen.fill((0, 0, 0))
-        p1 = remake_v(p1, w, (h / 2, p1[1], h / 2))
-        p2 = remake_v(p2, w, (h / 2, p2[1], h / 2))
-        p3 = remake_v(p3, w, (h / 2, p3[1], h / 2))
-        p4 = remake_v(p4, w, (h / 2, p4[1], h / 2))
-        p5 = remake_v(p5, w, (h / 2, p5[1], h / 2))
-        p6 = remake_v(p6, w, (h / 2, p6[1], h / 2))
-        p7 = remake_v(p7, w, (h / 2, p7[1], h / 2))
-        p8 = remake_v(p8, w, (h / 2, p8[1], h / 2))
-        p1 = remake_h(p1, w, (p1[0], h / 2, h / 2))
-        p2 = remake_h(p2, w, (p2[0], h / 2, h / 2))
-        p3 = remake_h(p3, w, (p3[0], h / 2, h / 2))
-        p4 = remake_h(p4, w, (p4[0], h / 2, h / 2))
-        p5 = remake_h(p5, w, (p5[0], h / 2, h / 2))
-        p6 = remake_h(p6, w, (p6[0], h / 2, h / 2))
-        p7 = remake_h(p7, w, (p7[0], h / 2, h / 2))
-        p8 = remake_h(p8, w, (p8[0], h / 2, h / 2))
-        cube = [([p1, p5, p6, p2], dist(camera.pos, polygon_center([p1, p5, p6, p2])), clr1),
-                ([p4, p8, p7, p3], dist(camera.pos, polygon_center([p4, p8, p7, p3])), clr2),
-                ([p1, p5, p8, p4], dist(camera.pos, polygon_center([p1, p5, p8, p4])), clr3),
-                ([p2, p6, p7, p3], dist(camera.pos, polygon_center([p2, p6, p7, p3])), clr4),
-                ([p1, p2, p3, p4], dist(camera.pos, polygon_center([p1, p2, p3, p4])), clr5),
-                ([p5, p6, p7, p8], dist(camera.pos, polygon_center([p5, p6, p7, p8])), clr6)]
+        self.screen.fill((0, 0, 0))
+        self.p1 = remake_v(self.p1, self.w, (h / 2, self.p1[1], h / 2))
+        self.p2 = remake_v(self.p2, self.w, (h / 2, self.p2[1], h / 2))
+        self.p3 = remake_v(self.p3, self.w, (h / 2, self.p3[1], h / 2))
+        self.p4 = remake_v(self.p4, self.w, (h / 2, self.p4[1], h / 2))
+        self.p5 = remake_v(self.p5, self.w, (h / 2, self.p5[1], h / 2))
+        self.p6 = remake_v(self.p6, self.w, (h / 2, self.p6[1], h / 2))
+        self.p7 = remake_v(self.p7, self.w, (h / 2, self.p7[1], h / 2))
+        self.p8 = remake_v(self.p8, self.w, (h / 2, self.p8[1], h / 2))
+        self.p1 = remake_h(self.p1, self.w, (self.p1[0], h / 2, h / 2))
+        self.p2 = remake_h(self.p2, self.w, (self.p2[0], h / 2, h / 2))
+        self.p3 = remake_h(self.p3, self.w, (self.p3[0], h / 2, h / 2))
+        self.p4 = remake_h(self.p4, self.w, (self.p4[0], h / 2, h / 2))
+        self.p5 = remake_h(self.p5, self.w, (self.p5[0], h / 2, h / 2))
+        self.p6 = remake_h(self.p6, self.w, (self.p6[0], h / 2, h / 2))
+        self.p7 = remake_h(self.p7, self.w, (self.p7[0], h / 2, h / 2))
+        self.p8 = remake_h(self.p8, self.w, (self.p8[0], h / 2, h / 2))
+        self.cube = [([self.p1, self.p5, self.p6, self.p2], dist(self.camera.pos, polygon_center([self.p1, self.p5, self.p6, self.p2])), self.clr1),
+                    ([self.p4, self.p8, self.p7, self.p3], dist(self.camera.pos, polygon_center([self.p4, self.p8, self.p7, self.p3])), self.clr2),
+                    ([self.p1, self.p5, self.p8, self.p4], dist(self.camera.pos, polygon_center([self.p1, self.p5, self.p8, self.p4])), self.clr3),
+                    ([self.p2, self.p6, self.p7, self.p3], dist(self.camera.pos, polygon_center([self.p2, self.p6, self.p7, self.p3])), self.clr4),
+                    ([self.p1, self.p2, self.p3, self.p4], dist(self.camera.pos, polygon_center([self.p1, self.p2, self.p3, self.p4])), self.clr5),
+                    ([self.p5, self.p6, self.p7, self.p8], dist(self.camera.pos, polygon_center([self.p5, self.p6, self.p7, self.p8])), self.clr6)]
         pygame.time.Clock().tick(30)
+
+
+
+if __name__ == '__main__':
+    game = Game()
+    while game.running:
+        game.main_loop()
 
