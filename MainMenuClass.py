@@ -3,7 +3,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUi
-from funcForWorkWithDB import getInformDB
+from funcForWorkWithDB import getInformDB, insertUserDB
 from uniAlertDialog import alertDialog
 
 
