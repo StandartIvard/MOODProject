@@ -47,6 +47,8 @@ class MainMenu(QWidget):
     def pygame_loop(self):
         if self.game.main_loop(self):
             self.close()
+        if self.game.pause:
+            self.show()
 
     def play(self):
         name = self.lineEdit.text()
@@ -62,7 +64,11 @@ class MainMenu(QWidget):
             alert.exec_()
 
         elif result[0][0] == name and result[0][1] == password:
-            self.game.chk = True
+            self.lineEdit.setText("")
+            self.lineEdit_2.setText("")
+            self.game.qtacess = True
+            self.game.pause = False
+            self.hide()
 
     def register(self):
         name = self.lineEdit_3.text()
