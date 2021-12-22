@@ -6,7 +6,8 @@ import sys
 
 
 class Game:
-    chk = False
+    pause = False
+    qtacess = False
     h = 50
 
     def __init__(self):
@@ -61,7 +62,7 @@ class Game:
 
     def main_loop(self, window):
         #print('ok')
-        if self.chk:
+        if self.qtacess:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
@@ -90,10 +91,14 @@ class Game:
                 v = remake_h(v, self.camera.ang_h, (0, 0, 0))
                 v = remake_s(v, self.camera.ang_s, (0, 0, 0))
                 self.camera.move(v)
-            if keys[pygame.K_z]:
+            if keys[pygame.K_LEFT]:
                 self.camera.turn_v(pi / 20)
-            if keys[pygame.K_c]:
+            if keys[pygame.K_RIGHT]:
                 self.camera.turn_v(-pi / 20)
+            if keys[pygame.K_ESCAPE]:
+                self.qtacess = False
+                self.pause = True
+
             self.hole_points = []
             self.hole_points.extend(self.cube)
             self.hole_points.extend(self.plane_map)
