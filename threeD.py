@@ -37,14 +37,14 @@ class Game:
         self.camera = Camera((0, 0, -(3**0.5) * 150 - 600), (0, 0, -600))
         self.terrain = []
         self.tecmap = 'mapName'
-        for i in range(0, 15):
+        """for i in range(0, 15):
             for j in range(0, 15):
                 c = (i * 50 - 330, -100, j * 50 - 1000)
                 c1 = (c[0] + 50, -100, c[2])
                 c2 = (c[0] + 50, -100, c[2] + 50)
                 c3 = (c[0], -100, c[2] + 50)
                 self.terrain.append(([c, c1, c2, c3],
-                        dist(self.camera.pos, polygon_center([c, c1, c2, c3])), self.clr2))
+                        dist(self.camera.pos, polygon_center([c, c1, c2, c3])), self.clr2))"""
         """for i in range(0, 15):
             for j in range(0, 15):
                 c = (i * 50 - 330, 100, j * 50 - 1000)
