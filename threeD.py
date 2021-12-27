@@ -3,6 +3,7 @@ from math import pi
 from py3d import Camera, size, remake_s, remake_h, remake_v, dist, polygon_center, mc
 from time import time
 import sys
+from funcForMap import translateMap
 
 
 class Game:
@@ -35,6 +36,7 @@ class Game:
         self.running = True
         self.camera = Camera((0, 0, -(3**0.5) * 150 - 600), (0, 0, -600))
         self.terrain = []
+        self.tecmap = 'mapName'
         for i in range(0, 15):
             for j in range(0, 15):
                 c = (i * 50 - 330, -100, j * 50 - 1000)
