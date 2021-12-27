@@ -85,6 +85,7 @@ def mc(p1, cam):
     ans = []
     pc = []
     for p in p1:
+        minus = 0
         x = p[0] - cam.pos[0]
         y = p[1] - cam.pos[1]
         z = p[2] - cam.pos[2]
