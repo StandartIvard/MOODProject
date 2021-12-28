@@ -114,9 +114,14 @@ class Game:
             self.hole_points.sort(key=lambda x: -x[1])
             for point in self.hole_points:
                 ind = self.hole_points.index(point)
+                cur_color = self.hole_points[ind][2]
+                cur_dist = dist(self.camera.pos, polygon_center(self.hole_points[ind][0]))
+                cur_color.hsva = (cur_color.hsva[0], cur_color.hsva[1],
+                                  max(0.05, min(1, self.camera.cur_field[2] / cur_dist)) * 100,
+                                  cur_color.hsva[3])
                 self.hole_points[ind] = (self.hole_points[ind][0],
-                        dist(self.camera.pos, polygon_center(self.hole_points[ind][0])),
-                        self.hole_points[ind][2])
+                        cur_dist,
+                        cur_color)
                 square = mc(point[0], self.camera)
                 if square != [(1, 1), (1, 1), (1, 1), (1, 1)]:
                     pygame.draw.polygon(self.screen, point[2], square)
