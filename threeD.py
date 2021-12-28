@@ -53,10 +53,11 @@ class Game:
                 c3 = (c[0], 100, c[2] + 50)
                 self.terrain.append(([c, c1, c2, c3],
                         dist(self.camera.pos, polygon_center([c, c1, c2, c3])), self.clr2))
-        cur_map = translateMap(self.tecmap, self.camera, self.clr1)
+        cur_map = translateMap(self.tecmap, self.camera, self.clr3)
         for x in cur_map:
             print(x)
         self.plane_map = []
+        self.plane_map.extend(cur_map)
         self.plane_map.extend(self.terrain)
         self.plane_map.append(([(-500, -500, 1000), (500, -500, 1000), (500, 500, 1000), (-500, 500, 1000)],
                               dist(self.camera.pos, polygon_center([(-500, -500, 1000), (500, -500, 1000), (500, 500, 1000), (-500, 500, 1000)])), self.clr1))
@@ -67,6 +68,10 @@ class Game:
                     ([self.p2, self.p6, self.p7, self.p3], dist(self.camera.pos, polygon_center([self.p2, self.p6, self.p7, self.p3])), self.clr4),
                     ([self.p1, self.p2, self.p3, self.p4], dist(self.camera.pos, polygon_center([self.p1, self.p2, self.p3, self.p4])), self.clr5),
                     ([self.p5, self.p6, self.p7, self.p8], dist(self.camera.pos, polygon_center([self.p5, self.p6, self.p7, self.p8])), self.clr6)]
+
+        self.hole_points = []
+        #self.hole_points.extend(self.cube)
+        self.hole_points.extend(self.plane_map)
 
     def main_loop(self, window):
         #print('ok')
@@ -106,10 +111,6 @@ class Game:
             if keys[pygame.K_ESCAPE]:
                 self.qtacess = False
                 self.pause = True
-
-            self.hole_points = []
-            self.hole_points.extend(self.cube)
-            self.hole_points.extend(self.plane_map)
             self.hole_points.sort(key=lambda x: -x[1])
             for point in self.hole_points:
                 ind = self.hole_points.index(point)
@@ -122,7 +123,7 @@ class Game:
             pygame.draw.circle(self.screen, pygame.Color('red'), mc([(0, 0, 0)], self.camera)[0], 5)
             pygame.display.flip()
             self.screen.fill((0, 0, 0))
-            self.p1 = remake_v(self.p1, self.w, (self.h / 2, self.p1[1], self.h / 2))
+            """self.p1 = remake_v(self.p1, self.w, (self.h / 2, self.p1[1], self.h / 2))
             self.p2 = remake_v(self.p2, self.w, (self.h / 2, self.p2[1], self.h / 2))
             self.p3 = remake_v(self.p3, self.w, (self.h / 2, self.p3[1], self.h / 2))
             self.p4 = remake_v(self.p4, self.w, (self.h / 2, self.p4[1], self.h / 2))
@@ -143,6 +144,6 @@ class Game:
                         ([self.p1, self.p5, self.p8, self.p4], dist(self.camera.pos, polygon_center([self.p1, self.p5, self.p8, self.p4])), self.clr3),
                         ([self.p2, self.p6, self.p7, self.p3], dist(self.camera.pos, polygon_center([self.p2, self.p6, self.p7, self.p3])), self.clr4),
                         ([self.p1, self.p2, self.p3, self.p4], dist(self.camera.pos, polygon_center([self.p1, self.p2, self.p3, self.p4])), self.clr5),
-                        ([self.p5, self.p6, self.p7, self.p8], dist(self.camera.pos, polygon_center([self.p5, self.p6, self.p7, self.p8])), self.clr6)]
+                        ([self.p5, self.p6, self.p7, self.p8], dist(self.camera.pos, polygon_center([self.p5, self.p6, self.p7, self.p8])), self.clr6)]"""
             pygame.time.Clock().tick(30)
             return False
