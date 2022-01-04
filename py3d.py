@@ -1,7 +1,25 @@
 from math import sin, cos
 
-size = [600, 600]
+size = [900, 600]
 CENTER = (size[0] / 2, size[1] / 2, 0)
+
+
+class Vector:
+    def __init__(self, v):
+        self.cords = v
+
+    def __mul__(self, other):
+        return Vector((self.cords[0] * other, self.cords[1] * other, self.cords[2] * other))
+
+    def __add__(self, other):
+        return Vector((self.cords[0] + other.cords[0],
+                       self.cords[1] + other.cords[1],
+                       self.cords[2] + other.cords[2]))
+
+    def __sub__(self, other):
+        return Vector((self.cords[0] - other.cords[0],
+                       self.cords[1] - other.cords[1],
+                       self.cords[2] - other.cords[2]))
 
 
 class Camera:
@@ -18,17 +36,24 @@ class Camera:
         self.cur_field = remake_s(self.cur_field, -self.ang_s, (0, 0, 0))
         self.cur_field = remake_v(self.cur_field, -self.ang_v, (0, 0, 0))
         self.cur_field = remake_h(self.cur_field, -self.ang_h, (0, 0, 0))
+        self.move_vectors = [Vector((0, 0, 250)), Vector((250, 0, 0))]
 
     def turn_h(self, rad):
         self.field = remake_h(self.field, rad, self.pos)
+        self.move_vectors[0] = Vector(remake_h(self.move_vectors[0].cords, rad, (0, 0, 0)))
+        self.move_vectors[1] = Vector(remake_h(self.move_vectors[1].cords, rad, (0, 0, 0)))
         self.ang_h += rad
 
     def turn_v(self, rad):
         self.field = remake_v(self.field, rad, self.pos)
+        self.move_vectors[0] = Vector(remake_v(self.move_vectors[0].cords, rad, (0, 0, 0)))
+        self.move_vectors[1] = Vector(remake_v(self.move_vectors[1].cords, rad, (0, 0, 0)))
         self.ang_v += rad
 
     def turn_s(self, rad):
         self.field = remake_s(self.field, rad, self.pos)
+        self.move_vectors[0] = Vector(remake_s(self.move_vectors[0].cords, rad, (0, 0, 0)))
+        self.move_vectors[1] = Vector(remake_s(self.move_vectors[1].cords, rad, (0, 0, 0)))
         self.ang_s += rad
 
     def move(self, v):
@@ -105,6 +130,6 @@ def mc(p1, cam):
         pc.append((x, y, 0))
         y = size[1] - y
         ans.append((x + CENTER[0], y - CENTER[1]))
-    if dist(polygon_center(pc), (0, 0, 0)) > (2**0.5) * 600:
+    if dist(polygon_center(pc), (0, 0, 0)) > (2**0.5) * 1000:
         return [(1, 1), (1, 1), (1, 1), (1, 1)]
     return ans

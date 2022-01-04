@@ -5,7 +5,7 @@ def translateMap(name, cam, color):
     f = open('./data/maps/' + name + '.txt')
     mapList = f.readlines()
     cords = list()
-    c = 50
+    c = 500
     maximum = 0
     for i in range(len(mapList)):
         mapList[i] = ''.join(mapList[i].split())
