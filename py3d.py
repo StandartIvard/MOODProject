@@ -21,6 +21,14 @@ class Vector:
                        self.cords[1] - other.cords[1],
                        self.cords[2] - other.cords[2]))
 
+    def __eq__(self, other):
+        if self.cords == other.cords:
+            return True
+        return False
+
+    def __str__(self):
+        return "->" + str(self.cords) + "<-"
+
 
 class Camera:
     def __init__(self, pos=(0, 0, 0), field=(0, 0, 1), ang_vert=0, ang_hor=0, ang_st=0):
@@ -36,7 +44,7 @@ class Camera:
         self.cur_field = remake_s(self.cur_field, -self.ang_s, (0, 0, 0))
         self.cur_field = remake_v(self.cur_field, -self.ang_v, (0, 0, 0))
         self.cur_field = remake_h(self.cur_field, -self.ang_h, (0, 0, 0))
-        self.move_vectors = [Vector((0, 0, 250)), Vector((250, 0, 0))]
+        self.move_vectors = [Vector((0, 0, 60)), Vector((60, 0, 0))]
 
     def turn_h(self, rad):
         self.field = remake_h(self.field, rad, self.pos)
