@@ -58,10 +58,10 @@ class Game:
             print(x)
         self.plane_map = []
         self.plane_map.extend(cur_map)
-        self.plane_map.extend(self.terrain)
-        self.plane_map.append(([(-500, -500, 1000), (500, -500, 1000), (500, 500, 1000), (-500, 500, 1000)],
-                              dist(self.camera.pos, polygon_center([(-500, -500, 1000), (500, -500, 1000), (500, 500, 1000), (-500, 500, 1000)])), self.clr1))
-        #self.plane_map.extend(cur_map)
+        # self.plane_map.extend(self.terrain)
+        # self.plane_map.append(([(-500, -500, 1000), (500, -500, 1000), (500, 500, 1000), (-500, 500, 1000)],
+        #                     dist(self.camera.pos, polygon_center([(-500, -500, 1000), (500, -500, 1000), (500, 500, 1000), (-500, 500, 1000)])), self.clr1))
+        # self.plane_map.extend(cur_map)
         self.cube = [([self.p1, self.p5, self.p6, self.p2], dist(self.camera.pos, polygon_center([self.p1, self.p5, self.p6, self.p2])), self.clr1),
                     ([self.p4, self.p8, self.p7, self.p3], dist(self.camera.pos, polygon_center([self.p4, self.p8, self.p7, self.p3])), self.clr2),
                     ([self.p1, self.p5, self.p8, self.p4], dist(self.camera.pos, polygon_center([self.p1, self.p5, self.p8, self.p4])), self.clr3),
@@ -70,7 +70,7 @@ class Game:
                     ([self.p5, self.p6, self.p7, self.p8], dist(self.camera.pos, polygon_center([self.p5, self.p6, self.p7, self.p8])), self.clr6)]
 
         self.hole_points = []
-        #self.hole_points.extend(self.cube)
+        # self.hole_points.extend(self.cube)
         self.hole_points.extend(self.plane_map)
 
     def main_loop(self, window):
