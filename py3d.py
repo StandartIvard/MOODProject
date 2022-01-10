@@ -29,6 +29,9 @@ class Vector:
     def __str__(self):
         return "->" + str(self.cords) + "<-"
 
+    def len(self):
+        return (self.cords[0]**2 + self.cords[1]**2 + self.cords[2]**2)**0.5
+
 
 class Camera:
     def __init__(self, pos=(0, 0, 0), field=(0, 0, 1), ang_vert=0, ang_hor=0, ang_st=0):
