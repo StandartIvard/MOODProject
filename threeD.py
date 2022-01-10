@@ -1,6 +1,7 @@
 import pygame
 from math import pi
-from py3d import Camera, size, remake_s, remake_h, remake_v, dist, polygon_center, mc
+from py3d import Camera, size, remake_s, remake_h, remake_v, dist, polygon_center, mc, Vector
+from math import pi, sin, cos
 from time import time
 import sys
 from funcForMap import translateMap
@@ -34,7 +35,7 @@ class Game:
         self.screen = pygame.display.set_mode(size)
         self.screen.fill((0, 0, 0))
         self.running = True
-        self.camera = Camera((0, 60, -(3**0.5) * 150 - 600), (0, 0, -600))
+        self.camera = Camera((0, 1750, -(3**0.5) * 200 - 600), (0, 1750, -600))
         self.terrain = []
         self.tecmap = 'mapName'
         for i in range(0, 15):
@@ -54,8 +55,6 @@ class Game:
                 self.terrain.append(([c, c1, c2, c3],
                         dist(self.camera.pos, polygon_center([c, c1, c2, c3])), self.clr2))
         cur_map = translateMap(self.tecmap, self.camera, self.clr3)
-        for x in cur_map:
-            print(x)
         self.plane_map = []
         self.plane_map.extend(cur_map)
         # self.plane_map.extend(self.terrain)
@@ -72,6 +71,7 @@ class Game:
         self.hole_points = []
         # self.hole_points.extend(self.cube)
         self.hole_points.extend(self.plane_map)
+        self.stuck_polygons = []
 
     def main_loop(self, window):
         #print('ok')
@@ -80,30 +80,60 @@ class Game:
                 if event.type == pygame.QUIT:
                     self.running = False
             keys = pygame.key.get_pressed()
+            if keys[pygame.K_SPACE]:
+                print('________________________________________________')
             if keys[pygame.K_w]:
-                v = (0, 0, 25)
-                v = remake_v(v, self.camera.ang_v, (0, 0, 0))
-                v = remake_h(v, self.camera.ang_h, (0, 0, 0))
-                v = remake_s(v, self.camera.ang_s, (0, 0, 0))
-                self.camera.move(v)
+                my_v = self.camera.move_vectors[0]
+                result_v = Vector((0, 0, 0))
+                if len(self.stuck_polygons) == 0:
+                    result_v = result_v + my_v
+                for v in self.stuck_polygons:
+                    if v.cords[0] == 0:
+                        ang = -(pi / 2) + self.camera.ang_v
+                        result_v = result_v + v * sin(ang) * my_v.len()
+                    else:
+                        ang = self.camera.ang_v
+                        result_v = result_v + v * sin(ang) * my_v.len()
+                self.camera.move(result_v.cords)
             if keys[pygame.K_a]:
-                v = (-25, 0, 0)
-                v = remake_v(v, self.camera.ang_v, (0, 0, 0))
-                v = remake_h(v, self.camera.ang_h, (0, 0, 0))
-                v = remake_s(v, self.camera.ang_s, (0, 0, 0))
-                self.camera.move(v)
+                my_v = self.camera.move_vectors[1] * (-1)
+                result_v = Vector((0, 0, 0))
+                if len(self.stuck_polygons) == 0:
+                    result_v = result_v + my_v
+                for v in self.stuck_polygons:
+                    if v.cords[0] == 0:
+                        ang = self.camera.ang_v
+                        result_v = result_v + v * sin(ang) * my_v.len()
+                    else:
+                        ang = self.camera.ang_v + (pi / 2)
+                        result_v = result_v + v * sin(ang) * my_v.len()
+                self.camera.move(result_v.cords)
             if keys[pygame.K_d]:
-                v = (25, 0, 0)
-                v = remake_v(v, self.camera.ang_v, (0, 0, 0))
-                v = remake_h(v, self.camera.ang_h, (0, 0, 0))
-                v = remake_s(v, self.camera.ang_s, (0, 0, 0))
-                self.camera.move(v)
+                my_v = self.camera.move_vectors[1]
+                result_v = Vector((0, 0, 0))
+                if len(self.stuck_polygons) == 0:
+                    result_v = result_v + my_v
+                for v in self.stuck_polygons:
+                    if v.cords[0] == 0:
+                        ang = -self.camera.ang_v
+                        result_v = result_v + v * sin(ang) * my_v.len()
+                    else:
+                        ang = -self.camera.ang_v - (pi / 2)
+                        result_v = result_v + v * sin(ang) * my_v.len()
+                self.camera.move(result_v.cords)
             if keys[pygame.K_s]:
-                v = (0, 0, -25)
-                v = remake_v(v, self.camera.ang_v, (0, 0, 0))
-                v = remake_h(v, self.camera.ang_h, (0, 0, 0))
-                v = remake_s(v, self.camera.ang_s, (0, 0, 0))
-                self.camera.move(v)
+                my_v = self.camera.move_vectors[0] * (-1)
+                result_v = Vector((0, 0, 0))
+                if len(self.stuck_polygons) == 0:
+                    result_v = result_v + my_v
+                for v in self.stuck_polygons:
+                    if v.cords[0] == 0:
+                        ang = (pi / 2) + self.camera.ang_v
+                        result_v = result_v + v * sin(ang) * my_v.len()
+                    else:
+                        ang = self.camera.ang_v + pi
+                        result_v = result_v + v * sin(ang) * my_v.len()
+                self.camera.move(result_v.cords)
             if keys[pygame.K_LEFT]:
                 self.camera.turn_v(pi / 20)
             if keys[pygame.K_RIGHT]:
@@ -112,43 +142,37 @@ class Game:
                 self.qtacess = False
                 self.pause = True
             self.hole_points.sort(key=lambda x: -x[1])
+            self.stuck_polygons = []
             for point in self.hole_points:
                 ind = self.hole_points.index(point)
                 cur_color = self.hole_points[ind][2]
                 cur_dist = dist(self.camera.pos, polygon_center(self.hole_points[ind][0]))
+                if point[0][0][1] == point[0][2][1]:
+                    plane_dist = 600
+                elif point[0][0][0] == point[0][1][0]:
+                    if point[0][0][2] >= self.camera.pos[2] >= point[0][1][2] or point[0][0][2] <= self.camera.pos[2] <= point[0][1][2]:
+                        plane_dist = abs(point[0][0][0] - self.camera.pos[0])
+                    else:
+                        plane_dist = 600
+                elif point[0][0][2] == point[0][1][2]:
+                    if point[0][0][0] >= self.camera.pos[0] >= point[0][1][0] or point[0][0][0] <= self.camera.pos[0] <= point[0][1][0]:
+                        plane_dist = abs(point[0][0][2] - self.camera.pos[2])
+                    else:
+                        plane_dist = 600
+                else:
+                    plane_dist = 600
                 cur_color.hsva = (cur_color.hsva[0], cur_color.hsva[1],
-                                  max(0.05, min(1, self.camera.cur_field[2] / cur_dist)) * 100,
+                                  max(0.01, min(1, 400 / cur_dist)) * 100,
                                   cur_color.hsva[3])
-                self.hole_points[ind] = (self.hole_points[ind][0],
-                        cur_dist,
-                        cur_color)
+                self.hole_points[ind] = (self.hole_points[ind][0], cur_dist, cur_color)
+                if plane_dist < 575:
+                    buffer_vector = Vector(self.hole_points[ind][0][0]) - Vector(self.hole_points[ind][0][1])
+                    self.stuck_polygons.append(buffer_vector * (1 / buffer_vector.len()))
                 square = mc(point[0], self.camera)
                 if square != [(1, 1), (1, 1), (1, 1), (1, 1)]:
                     pygame.draw.polygon(self.screen, point[2], square)
             pygame.draw.circle(self.screen, pygame.Color('red'), mc([(0, 0, 0)], self.camera)[0], 5)
             pygame.display.flip()
             self.screen.fill((0, 0, 0))
-            """self.p1 = remake_v(self.p1, self.w, (self.h / 2, self.p1[1], self.h / 2))
-            self.p2 = remake_v(self.p2, self.w, (self.h / 2, self.p2[1], self.h / 2))
-            self.p3 = remake_v(self.p3, self.w, (self.h / 2, self.p3[1], self.h / 2))
-            self.p4 = remake_v(self.p4, self.w, (self.h / 2, self.p4[1], self.h / 2))
-            self.p5 = remake_v(self.p5, self.w, (self.h / 2, self.p5[1], self.h / 2))
-            self.p6 = remake_v(self.p6, self.w, (self.h / 2, self.p6[1], self.h / 2))
-            self.p7 = remake_v(self.p7, self.w, (self.h / 2, self.p7[1], self.h / 2))
-            self.p8 = remake_v(self.p8, self.w, (self.h / 2, self.p8[1], self.h / 2))
-            self.p1 = remake_h(self.p1, self.w, (self.p1[0], self.h / 2, self.h / 2))
-            self.p2 = remake_h(self.p2, self.w, (self.p2[0], self.h / 2, self.h / 2))
-            self.p3 = remake_h(self.p3, self.w, (self.p3[0], self.h / 2, self.h / 2))
-            self.p4 = remake_h(self.p4, self.w, (self.p4[0], self.h / 2, self.h / 2))
-            self.p5 = remake_h(self.p5, self.w, (self.p5[0], self.h / 2, self.h / 2))
-            self.p6 = remake_h(self.p6, self.w, (self.p6[0], self.h / 2, self.h / 2))
-            self.p7 = remake_h(self.p7, self.w, (self.p7[0], self.h / 2, self.h / 2))
-            self.p8 = remake_h(self.p8, self.w, (self.p8[0], self.h / 2, self.h / 2))
-            self.cube = [([self.p1, self.p5, self.p6, self.p2], dist(self.camera.pos, polygon_center([self.p1, self.p5, self.p6, self.p2])), self.clr1),
-                        ([self.p4, self.p8, self.p7, self.p3], dist(self.camera.pos, polygon_center([self.p4, self.p8, self.p7, self.p3])), self.clr2),
-                        ([self.p1, self.p5, self.p8, self.p4], dist(self.camera.pos, polygon_center([self.p1, self.p5, self.p8, self.p4])), self.clr3),
-                        ([self.p2, self.p6, self.p7, self.p3], dist(self.camera.pos, polygon_center([self.p2, self.p6, self.p7, self.p3])), self.clr4),
-                        ([self.p1, self.p2, self.p3, self.p4], dist(self.camera.pos, polygon_center([self.p1, self.p2, self.p3, self.p4])), self.clr5),
-                        ([self.p5, self.p6, self.p7, self.p8], dist(self.camera.pos, polygon_center([self.p5, self.p6, self.p7, self.p8])), self.clr6)]"""
-            pygame.time.Clock().tick(30)
+            pygame.time.Clock().tick(100)
             return False
