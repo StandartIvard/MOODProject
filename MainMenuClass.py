@@ -3,8 +3,9 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUi
-from funcForWorkWithDB import getInformDB, insertUserDB
+from funcForWorkWithDB import getInformDB, insertUserDB, updatePassword
 from uniAlertDialog import alertDialog
+from passwordChangeDialog import passwordDialog
 
 
 class MainMenu(QWidget):
@@ -38,6 +39,8 @@ class MainMenu(QWidget):
 
         self.init_pygame(game)
 
+        self.secondForm = SecondMenu(self.game)
+
     def init_pygame(self, game):
         self.game = game
         self.timer = QTimer()
@@ -48,7 +51,10 @@ class MainMenu(QWidget):
         if self.game.main_loop(self):
             self.close()
         if self.game.pause:
-            self.show()
+            self.secondForm.name = self.name
+            self.secondForm.show()
+            self.secondForm.label.setText("Имя персонажа: " + self.secondForm.name)
+            self.secondForm.label_2.setText("Очков: " + str(self.secondForm.score))
 
     def play(self):
         name = self.lineEdit.text()
@@ -69,6 +75,7 @@ class MainMenu(QWidget):
             self.game.qtacess = True
             self.game.pause = False
             self.hide()
+            self.name = result[0][0]
 
     def register(self):
         name = self.lineEdit_3.text()
@@ -94,3 +101,40 @@ class MainMenu(QWidget):
             alert.exec_()
             self.lineEdit_4.setText("")
             self.lineEdit_5.setText("")
+
+
+class SecondMenu(QWidget):
+
+    def __init__(self, game, parent=None):
+        super().__init__(parent)
+        loadUi(".//data/PauseMenu.ui", self)
+        oImage = QImage("data/images/screen2background.jpg")
+        sImage = oImage.scaled(QSize(1429, 450))
+        palette = QPalette()
+        palette.setBrush(10, QBrush(sImage))
+        self.setPalette(palette)
+
+        self.name = ""
+        self.score = 0
+
+        self.pushButton.clicked.connect(self.changePass)
+
+    def changePass(self):
+        dlg = passwordDialog(self)
+        dlg.exec_()
+        tecpass, newpass, newpass2 = dlg.getPassword()
+
+        result = getInformDB(self.name)
+
+        self.score = result[0][2]
+
+        if result[0][1] != tecpass:
+            alert = alertDialog("Ваш старый пароль неверен")
+            alert.exec_()
+        elif newpass != newpass2:
+            alert = alertDialog("Новые пароли не совпадают")
+            alert.exec_()
+        elif result[0][1] == tecpass and newpass == newpass2:
+            updatePassword(self.name, newpass)
+            alert = alertDialog("Ваш пароль успешно изменён")
+            alert.exec_()
