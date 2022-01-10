@@ -12,3 +12,9 @@ def insertUserDB(name, password):
     cur = con.cursor()
     cur.execute("INSERT INTO users VALUES('" + name + "','" + password + "', 0)")
     con.commit()
+
+def updatePassword(name, password):
+    con = sqlite3.connect('data/usersDB.db')
+    cur = con.cursor()
+    cur.execute("UPDATE users SET password = '" + password + "' WHERE username = '" + name + "';")
+    con.commit()
