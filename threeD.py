@@ -4,6 +4,7 @@ from py3d import Camera, size, remake_s, remake_h, remake_v, dist, polygon_cente
 from time import time
 import sys
 from funcForMap import translateMap
+from loadImage import load_hand_image
 
 
 class Game:
@@ -73,6 +74,14 @@ class Game:
         # self.hole_points.extend(self.cube)
         self.hole_points.extend(self.plane_map)
 
+        self.sprites_of_hands = pygame.sprite.Group()
+        sprite = pygame.sprite.Sprite()
+        sprite.image = load_hand_image("data/images/HandSprites/NormalHands.png")
+        sprite.rect = sprite.image.get_rect()
+        self.sprites_of_hands.add(sprite)
+        sprite.rect.x = 0
+        sprite.rect.y = 0
+
     def main_loop(self, window):
         #print('ok')
         if self.qtacess:
@@ -126,6 +135,9 @@ class Game:
                 if square != [(1, 1), (1, 1), (1, 1), (1, 1)]:
                     pygame.draw.polygon(self.screen, point[2], square)
             pygame.draw.circle(self.screen, pygame.Color('red'), mc([(0, 0, 0)], self.camera)[0], 5)
+
+            self.sprites_of_hands.draw(self.screen)
+
             pygame.display.flip()
             self.screen.fill((0, 0, 0))
             """self.p1 = remake_v(self.p1, self.w, (self.h / 2, self.p1[1], self.h / 2))
