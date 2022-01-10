@@ -46,15 +46,16 @@ class Game:
                 c3 = (c[0], -100, c[2] + 50)
                 self.terrain.append(([c, c1, c2, c3],
                         dist(self.camera.pos, polygon_center([c, c1, c2, c3])), self.clr2))
-        for i in range(0, 15):
+        grey_color = pygame.Color('grey')
+        """for i in range(0, 15):
             for j in range(0, 15):
                 c = (i * 50 - 330, 100, j * 50 - 1000)
                 c1 = (c[0] + 50, 100, c[2])
                 c2 = (c[0] + 50, 100, c[2] + 50)
                 c3 = (c[0], 100, c[2] + 50)
                 self.terrain.append(([c, c1, c2, c3],
-                        dist(self.camera.pos, polygon_center([c, c1, c2, c3])), self.clr2))
-        cur_map = translateMap(self.tecmap, self.camera, self.clr3)
+                        dist(self.camera.pos, polygon_center([c, c1, c2, c3])), self.clr2))"""
+        cur_map = translateMap(self.tecmap, self.camera, grey_color)
         self.plane_map = []
         self.plane_map.extend(cur_map)
         # self.plane_map.extend(self.terrain)
@@ -162,7 +163,7 @@ class Game:
                 else:
                     plane_dist = 600
                 cur_color.hsva = (cur_color.hsva[0], cur_color.hsva[1],
-                                  max(0.01, min(1, 400 / cur_dist)) * 100,
+                                  max(0.01, min(0.7, 1000 / cur_dist)) * 100,
                                   cur_color.hsva[3])
                 self.hole_points[ind] = (self.hole_points[ind][0], cur_dist, cur_color)
                 if plane_dist < 575:
