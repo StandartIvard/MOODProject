@@ -85,55 +85,63 @@ class Game:
                 print('________________________________________________')
             if keys[pygame.K_w]:
                 my_v = self.camera.move_vectors[0]
-                result_v = Vector((0, 0, 0))
-                if len(self.stuck_polygons) == 0:
-                    result_v = result_v + my_v
+                result_v = my_v
                 for v in self.stuck_polygons:
                     if v.cords[0] == 0:
                         ang = -(pi / 2) + self.camera.ang_v
-                        result_v = result_v + v * sin(ang) * my_v.len()
                     else:
                         ang = self.camera.ang_v
-                        result_v = result_v + v * sin(ang) * my_v.len()
+                    ang %= 2 * pi
+                    if not (pi / 2 < ang < 3 * pi / 2):
+                        break
+                    else:
+                        result_v = Vector((0, 0, 0))
+                    result_v = result_v + v * sin(ang) * my_v.len()
                 self.camera.move(result_v.cords)
             if keys[pygame.K_a]:
                 my_v = self.camera.move_vectors[1] * (-1)
-                result_v = Vector((0, 0, 0))
-                if len(self.stuck_polygons) == 0:
-                    result_v = result_v + my_v
+                result_v = my_v
                 for v in self.stuck_polygons:
                     if v.cords[0] == 0:
                         ang = self.camera.ang_v
-                        result_v = result_v + v * sin(ang) * my_v.len()
                     else:
                         ang = self.camera.ang_v + (pi / 2)
-                        result_v = result_v + v * sin(ang) * my_v.len()
+                    ang %= 2 * pi
+                    if not (pi / 2 > ang or ang > 3 * pi / 2):
+                        break
+                    else:
+                        result_v = Vector((0, 0, 0))
+                    result_v = result_v + v * sin(ang) * my_v.len()
                 self.camera.move(result_v.cords)
             if keys[pygame.K_d]:
                 my_v = self.camera.move_vectors[1]
-                result_v = Vector((0, 0, 0))
-                if len(self.stuck_polygons) == 0:
-                    result_v = result_v + my_v
+                result_v = my_v
                 for v in self.stuck_polygons:
                     if v.cords[0] == 0:
                         ang = -self.camera.ang_v
-                        result_v = result_v + v * sin(ang) * my_v.len()
                     else:
                         ang = -self.camera.ang_v - (pi / 2)
-                        result_v = result_v + v * sin(ang) * my_v.len()
+                    ang %= 2 * pi
+                    if not (pi / 2 > ang or ang > 3 * pi / 4):
+                        break
+                    else:
+                        result_v = Vector((0, 0, 0))
+                    result_v = result_v + v * sin(ang) * my_v.len()
                 self.camera.move(result_v.cords)
             if keys[pygame.K_s]:
                 my_v = self.camera.move_vectors[0] * (-1)
-                result_v = Vector((0, 0, 0))
-                if len(self.stuck_polygons) == 0:
-                    result_v = result_v + my_v
+                result_v = my_v
                 for v in self.stuck_polygons:
                     if v.cords[0] == 0:
                         ang = (pi / 2) + self.camera.ang_v
-                        result_v = result_v + v * sin(ang) * my_v.len()
                     else:
                         ang = self.camera.ang_v + pi
-                        result_v = result_v + v * sin(ang) * my_v.len()
+                    ang %= 2 * pi
+                    if not (pi / 2 < ang < 3 * pi / 2):
+                        break
+                    else:
+                        result_v = Vector((0, 0, 0))
+                    result_v = result_v + v * sin(ang) * my_v.len()
                 self.camera.move(result_v.cords)
             if keys[pygame.K_LEFT]:
                 self.camera.turn_v(pi / 20)
