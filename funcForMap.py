@@ -28,18 +28,28 @@ def translateMap(name, cam, color):
                 chek = False
 
             if mapList[i][j] == mapList[i][j + 1] and mapList[i][j] != '0':
-                temp = polygon_center([((len(mapList[i]) - j - 2) * c, c * int(mapList[i][j]), c * i), ((len(mapList[i]) - j - 1) * c, c * int(mapList[i][j + 1]), c * i),
-                                 ((len(mapList[i]) - j - 1) * c, 0, c * i), (c * (len(mapList[i]) - j - 2), 0, c * i)])
-                cords.append([[((len(mapList[i]) - j - 2) * c, c * int(mapList[i][j]), c * i), ((len(mapList[i]) - j - 1) * c, c * int(mapList[i][j + 1]), c * i),
-                                 ((len(mapList[i]) - j - 1) * c, 0, c * i), (c * (len(mapList[i]) - j - 2), 0, c * i)],
-                                     dist(temp, cam.pos), color])
+                for k in range(int(mapList[i][j])):
+                    temp = polygon_center([((len(mapList[i]) - j - 2) * c, c * (k + 1), c * i),
+                                           ((len(mapList[i]) - j - 1) * c, c * (k + 1), c * i),
+                                           ((len(mapList[i]) - j - 1) * c, c * k, c * i),
+                                           (c * (len(mapList[i]) - j - 2), c * k, c * i)])
+                    cords.append([[((len(mapList[i]) - j - 2) * c, c * (k + 1), c * i),
+                                   ((len(mapList[i]) - j - 1) * c, c * (k + 1), c * i),
+                                   ((len(mapList[i]) - j - 1) * c, c * k, c * i),
+                                   (c * (len(mapList[i]) - j - 2), c * k, c * i)],
+                                  dist(temp, cam.pos), color])
 
             if mapList[i][j] == mapList[i + 1][j] and mapList[i][j] != '0':
-                temp = polygon_center([((len(mapList[i]) - j - 1) * c, c * int(mapList[i][j]), c * i), ((len(mapList[i + 1]) - j - 1) * c, c * int(mapList[i + 1][j]), c * (i + 1)),
-                               ((len(mapList[i + 1]) - j - 1) * c, 0, c * (i + 1)), ((len(mapList[i]) - j - 1) * c, 0, c * i)])
-                cords.append([[((len(mapList[i]) - j - 1) * c, c * int(mapList[i][j]), c * i), ((len(mapList[i + 1]) - j - 1) * c, c * int(mapList[i + 1][j]), c * (i + 1)),
-                               ((len(mapList[i + 1]) - j - 1) * c, 0, c * (i + 1)), ((len(mapList[i]) - j - 1) * c, 0, c * i)],
-                              dist(temp, cam.pos), color])
+                for k in range(int(mapList[i][j])):
+                    temp = polygon_center([((len(mapList[i]) - j - 1) * c, c * (k + 1), c * i),
+                                           ((len(mapList[i + 1]) - j - 1) * c, c * (k + 1), c * (i + 1)),
+                                           ((len(mapList[i + 1]) - j - 1) * c, c * k, c * (i + 1)),
+                                           ((len(mapList[i]) - j - 1) * c, c * k, c * i)])
+                    cords.append([[((len(mapList[i]) - j - 1) * c, c * (k + 1), c * i),
+                                   ((len(mapList[i + 1]) - j - 1) * c, c * (k + 1), c * (i + 1)),
+                                   ((len(mapList[i + 1]) - j - 1) * c, c * k, c * (i + 1)),
+                                   ((len(mapList[i]) - j - 1) * c, c * k, c * i)],
+                                  dist(temp, cam.pos), color])
             if chek:
                 temp = polygon_center([((len(mapList[i]) - j - 2) * c, 0, c * i),
                                        ((len(mapList[i]) - j - 1) * c, 0, c * i),
@@ -74,9 +84,10 @@ def translateMap(name, cam, color):
     i = len(mapList) - 1
     for j in range(len(mapList[i]) - 1):
         if mapList[i][j] == mapList[i][j + 1] and int(mapList[i][j]) != 0:
-            temp = polygon_center([((len(mapList[i]) - j - 2) * c, c * int(mapList[i][j]), c * i), ((len(mapList[i]) - j - 1) * c, c * int(mapList[i][j + 1]), c * i),
-                    ((len(mapList[i]) - j - 1) * c, 0, c * i), ((len(mapList[i]) - j - 2) * c, 0, c * i)])
-            cords.append([[((len(mapList[i]) - j - 2) * c, c * int(mapList[i][j]), c * i), ((len(mapList[i]) - j - 1) * c, c * int(mapList[i][j + 1]), c * i),
-                             ((len(mapList[i]) - j - 1) * c, 0, c * i), ((len(mapList[i]) - j - 2) * c, 0, c * i)],
-                             dist(temp, cam.pos), color])
+            for k in range(int(mapList[i][j])):
+                temp = polygon_center([((len(mapList[i]) - j - 2) * c, c * (k + 1), c * i), ((len(mapList[i]) - j - 1) * c, c * (k + 1), c * i),
+                        ((len(mapList[i]) - j - 1) * c, c * k, c * i), ((len(mapList[i]) - j - 2) * c, c * k, c * i)])
+                cords.append([[((len(mapList[i]) - j - 2) * c, c * (k + 1), c * i), ((len(mapList[i]) - j - 1) * c, c * (k + 1), c * i),
+                                 ((len(mapList[i]) - j - 1) * c, c * k, c * i), ((len(mapList[i]) - j - 2) * c, c * k, c * i)],
+                                 dist(temp, cam.pos), color])
     return cords

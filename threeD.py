@@ -145,6 +145,14 @@ class Game:
         sprite.rect.x = 0
         sprite.rect.y = 0
 
+        self.scope = pygame.sprite.Group()
+        sprite = pygame.sprite.Sprite()
+        sprite.image = load_hand_image("data/images/scope.png")
+        sprite.rect = sprite.image.get_rect()
+        self.scope.add(sprite)
+        sprite.rect.x = 0
+        sprite.rect.y = 0
+
         self.handGroups = [self.sprites_of_hands_1, self.sprites_of_hands_2, self.sprites_of_hands_3,
                            self.sprites_of_hands_4, self.sprites_of_hands_5, self.sprites_of_hands_6,
                            self.sprites_of_hands_7, self.sprites_of_hands_8, self.sprites_of_hands_7,
@@ -263,6 +271,7 @@ class Game:
                     self.count += self.indx
 
             self.handGroups[self.count].draw(self.screen)
+            self.scope.draw(self.screen)
 
             pygame.display.flip()
             self.screen.fill((0, 0, 0))
