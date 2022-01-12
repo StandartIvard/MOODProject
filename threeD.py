@@ -15,9 +15,16 @@ class Game:
     shooting = False
     count = 0
     indx = 1
+
+    playlist = [
+        './data/sounds/METALMUSICONE.wav',
+        './data/sounds/METALMUSICTWO.wav'
+    ]
+
     pygame.mixer.init()
-    pygame.mixer.music.load('./data/sounds/ShootingSound.wav')
-    pygame.mixer.music.set_volume(0.7)
+    pygame.mixer.Channel(0).play(pygame.mixer.Sound('./data/sounds/METALMUSICONE.wav'))
+    pygame.mixer.Channel(0).set_volume(0.5)
+    pygame.mixer.Channel(0).queue(pygame.mixer.Sound('./data/sounds/METALMUSICTWO.wav'))
 
     def __init__(self):
         pygame.init()
@@ -170,7 +177,7 @@ class Game:
                 print('________________________________________________')
                 if not self.shooting:
                     self.shooting = True
-                    pygame.mixer.music.play()
+                    pygame.mixer.Channel(1).play(pygame.mixer.Sound('./data/sounds/ShootingSound.wav'))
 
             if keys[pygame.K_w]:
                 my_v = self.camera.move_vectors[0]
