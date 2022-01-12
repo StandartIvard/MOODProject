@@ -1,4 +1,4 @@
-from math import sin, cos
+from math import sin, cos, pi
 
 size = [900, 600]
 CENTER = (size[0] / 2, size[1] / 2, 0)
@@ -54,18 +54,21 @@ class Camera:
         self.move_vectors[0] = Vector(remake_h(self.move_vectors[0].cords, rad, (0, 0, 0)))
         self.move_vectors[1] = Vector(remake_h(self.move_vectors[1].cords, rad, (0, 0, 0)))
         self.ang_h += rad
+        self.ang_h %= 2 * pi
 
     def turn_v(self, rad):
         self.field = remake_v(self.field, rad, self.pos)
         self.move_vectors[0] = Vector(remake_v(self.move_vectors[0].cords, rad, (0, 0, 0)))
         self.move_vectors[1] = Vector(remake_v(self.move_vectors[1].cords, rad, (0, 0, 0)))
         self.ang_v += rad
+        self.ang_v %= 2 * pi
 
     def turn_s(self, rad):
         self.field = remake_s(self.field, rad, self.pos)
         self.move_vectors[0] = Vector(remake_s(self.move_vectors[0].cords, rad, (0, 0, 0)))
         self.move_vectors[1] = Vector(remake_s(self.move_vectors[1].cords, rad, (0, 0, 0)))
         self.ang_s += rad
+        self.ang_s %= 2 * pi
 
     def move(self, v):
         xp = self.pos[0] + v[0]

@@ -42,7 +42,7 @@ class Game:
         self.screen = pygame.display.set_mode(size)
         self.screen.fill((0, 0, 0))
         self.running = True
-        self.camera = Camera((2000, 1750, -(3**0.5) * 200 + 1500), (2000, 1750, 1500))
+        self.camera = Camera((2000, 800, -(3**0.5) * 200 + 1500), (2000, 800, 1500))
         self.terrain = []
         self.tecmap = 'mapName'
         for i in range(0, 15):
@@ -82,6 +82,7 @@ class Game:
         self.stuck_polygons = []
 
         self.sprites_of_hands_1 = pygame.sprite.Group()
+        print(len(self.hole_points))
         sprite = pygame.sprite.Sprite()
         sprite.image = load_hand_image("data/images/HandSprites/NormalHands.png")
         sprite.rect = sprite.image.get_rect()
@@ -166,11 +167,9 @@ class Game:
                 if event.type == pygame.QUIT:
                     self.running = False
             keys = pygame.key.get_pressed()
-            if keys[pygame.K_SPACE]:
-                print('________________________________________________')
-                if not self.shooting:
-                    self.shooting = True
-                    pygame.mixer.music.play()
+            if not self.shooting:
+                self.shooting = True
+                pygame.mixer.music.play()
 
             if keys[pygame.K_w]:
                 my_v = self.camera.move_vectors[0]
