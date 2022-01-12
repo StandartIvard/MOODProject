@@ -89,6 +89,7 @@ class Game:
         self.stuck_polygons = []
 
         self.sprites_of_hands_1 = pygame.sprite.Group()
+        print(len(self.hole_points))
         sprite = pygame.sprite.Sprite()
         sprite.image = load_hand_image("data/images/HandSprites/NormalHands.png")
         sprite.rect = sprite.image.get_rect()
