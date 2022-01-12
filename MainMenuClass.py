@@ -55,6 +55,11 @@ class MainMenu(QWidget):
             self.secondForm.show()
             self.secondForm.label.setText("Имя персонажа: " + self.secondForm.name)
             self.secondForm.label_2.setText("Очков: " + str(self.secondForm.score))
+        if self.secondForm.cont:
+            self.game.pause = False
+            self.secondForm.cont = False
+            self.game.qtacess = True
+            self.secondForm.hide()
 
     def play(self):
         name = self.lineEdit.text()
@@ -118,6 +123,9 @@ class SecondMenu(QWidget):
         self.score = 0
 
         self.pushButton.clicked.connect(self.changePass)
+        self.pushButton_2.clicked.connect(self.conti)
+
+        self.cont = False
 
     def changePass(self):
         dlg = passwordDialog(self)
@@ -138,3 +146,6 @@ class SecondMenu(QWidget):
             updatePassword(self.name, newpass)
             alert = alertDialog("Ваш пароль успешно изменён")
             alert.exec_()
+
+    def conti(self):
+        self.cont = True
