@@ -1,6 +1,6 @@
 import pygame
 from math import pi
-from py3d import Camera, size, remake_s, remake_h, remake_v, dist, polygon_center, mc, Vector
+from py3d import Camera, size, remake_s, remake_h, remake_v, dist, polygon_center, mc, Vector, is_out
 from math import pi, sin, cos
 from time import time
 import sys
@@ -49,7 +49,7 @@ class Game:
         self.screen = pygame.display.set_mode(size)
         self.screen.fill((0, 0, 0))
         self.running = True
-        self.camera = Camera((2000, 860, -(3**0.5) * 200 + 1500), (2000, 1750, 1500))
+        self.camera = Camera((2000, 800, -(3**0.5) * 200 + 1500), (2000, 800, 1500))
         self.terrain = []
         self.tecmap = 'mapName'
         for i in range(0, 15):
@@ -89,7 +89,6 @@ class Game:
         self.stuck_polygons = []
 
         self.sprites_of_hands_1 = pygame.sprite.Group()
-        print(len(self.hole_points))
         sprite = pygame.sprite.Sprite()
         sprite.image = load_hand_image("data/images/HandSprites/NormalHands.png")
         sprite.rect = sprite.image.get_rect()
@@ -168,7 +167,6 @@ class Game:
                            self.sprites_of_hands_2, self.sprites_of_hands_1]
 
     def main_loop(self, window):
-        #print('ok')
         if self.qtacess:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -182,55 +180,63 @@ class Game:
 
             if keys[pygame.K_w]:
                 my_v = self.camera.move_vectors[0]
-                result_v = Vector((0, 0, 0))
-                if len(self.stuck_polygons) == 0:
-                    result_v = result_v + my_v
+                result_v = my_v
                 for v in self.stuck_polygons:
-                    if v.cords[0] == 0:
+                    if is_out(self.camera, v, 'w'):
+                        continue
+                    result_v = Vector((0, 0, 0))
+                    if v[0][0] == v[1][0]:
                         ang = -(pi / 2) + self.camera.ang_v
-                        result_v = result_v + v * sin(ang) * my_v.len()
                     else:
                         ang = self.camera.ang_v
-                        result_v = result_v + v * sin(ang) * my_v.len()
+                    buffer_vector = Vector(v[0]) - Vector(v[1])
+                    vector = buffer_vector * (1 / buffer_vector.len())
+                    result_v = result_v + vector * sin(ang) * my_v.len()
                 self.camera.move(result_v.cords)
             if keys[pygame.K_a]:
                 my_v = self.camera.move_vectors[1] * (-1)
-                result_v = Vector((0, 0, 0))
-                if len(self.stuck_polygons) == 0:
-                    result_v = result_v + my_v
+                result_v = my_v
                 for v in self.stuck_polygons:
-                    if v.cords[0] == 0:
+                    if is_out(self.camera, v, 'a'):
+                        continue
+                    result_v = Vector((0, 0, 0))
+                    if v[0][0] == v[1][0]:
                         ang = self.camera.ang_v
-                        result_v = result_v + v * sin(ang) * my_v.len()
                     else:
                         ang = self.camera.ang_v + (pi / 2)
-                        result_v = result_v + v * sin(ang) * my_v.len()
+                    buffer_vector = Vector(v[0]) - Vector(v[1])
+                    vector = buffer_vector * (1 / buffer_vector.len())
+                    result_v = result_v + vector * sin(ang) * my_v.len()
                 self.camera.move(result_v.cords)
             if keys[pygame.K_d]:
                 my_v = self.camera.move_vectors[1]
-                result_v = Vector((0, 0, 0))
-                if len(self.stuck_polygons) == 0:
-                    result_v = result_v + my_v
+                result_v = my_v
                 for v in self.stuck_polygons:
-                    if v.cords[0] == 0:
+                    if is_out(self.camera, v, 'd'):
+                        continue
+                    result_v = Vector((0, 0, 0))
+                    if v[0][0] == v[1][0]:
                         ang = -self.camera.ang_v
-                        result_v = result_v + v * sin(ang) * my_v.len()
                     else:
                         ang = -self.camera.ang_v - (pi / 2)
-                        result_v = result_v + v * sin(ang) * my_v.len()
+                    buffer_vector = Vector(v[0]) - Vector(v[1])
+                    vector = buffer_vector * (1 / buffer_vector.len())
+                    result_v = result_v + vector * sin(ang) * my_v.len()
                 self.camera.move(result_v.cords)
             if keys[pygame.K_s]:
                 my_v = self.camera.move_vectors[0] * (-1)
-                result_v = Vector((0, 0, 0))
-                if len(self.stuck_polygons) == 0:
-                    result_v = result_v + my_v
+                result_v = my_v
                 for v in self.stuck_polygons:
-                    if v.cords[0] == 0:
+                    if is_out(self.camera, v, 's'):
+                        continue
+                    result_v = Vector((0, 0, 0))
+                    if v[0][0] == v[1][0]:
                         ang = (pi / 2) + self.camera.ang_v
-                        result_v = result_v + v * sin(ang) * my_v.len()
                     else:
                         ang = self.camera.ang_v + pi
-                        result_v = result_v + v * sin(ang) * my_v.len()
+                    buffer_vector = Vector(v[0]) - Vector(v[1])
+                    vector = buffer_vector * (1 / buffer_vector.len())
+                    result_v = result_v + vector * sin(ang) * my_v.len()
                 self.camera.move(result_v.cords)
             if keys[pygame.K_LEFT]:
                 self.camera.turn_v(pi / 20)
@@ -264,8 +270,7 @@ class Game:
                                   cur_color.hsva[3])
                 self.hole_points[ind] = (self.hole_points[ind][0], cur_dist, cur_color)
                 if plane_dist < 575:
-                    buffer_vector = Vector(self.hole_points[ind][0][0]) - Vector(self.hole_points[ind][0][1])
-                    self.stuck_polygons.append(buffer_vector * (1 / buffer_vector.len()))
+                    self.stuck_polygons.append(point[0])
                 square = mc(point[0], self.camera)
                 if square != [(1, 1), (1, 1), (1, 1), (1, 1)]:
                     pygame.draw.polygon(self.screen, point[2], square)
