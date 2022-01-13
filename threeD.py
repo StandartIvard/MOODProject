@@ -49,7 +49,7 @@ class Game:
         self.screen = pygame.display.set_mode(size)
         self.screen.fill((0, 0, 0))
         self.running = True
-        self.camera = Camera((2000, 1750, -(3**0.5) * 200 + 1500), (2000, 1750, 1500))
+        self.camera = Camera((2000, 860, -(3**0.5) * 200 + 1500), (2000, 1750, 1500))
         self.terrain = []
         self.tecmap = 'mapName'
         for i in range(0, 15):
