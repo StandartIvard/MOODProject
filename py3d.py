@@ -29,6 +29,9 @@ class Vector:
     def __str__(self):
         return "->" + str(self.cords) + "<-"
 
+    def __getitem__(self, item):
+        return self.cords[item]
+
     def len(self):
         return (self.cords[0]**2 + self.cords[1]**2 + self.cords[2]**2)**0.5
 
@@ -82,7 +85,7 @@ def dist(p1, p2):
     return ((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2 + (p1[2] - p2[2])**2)**0.5
 
 
-def is_out(cam, wall):
+def is_out(cam, wall, key):
     obj = []
     for p in wall:
         obj.append((p[0] - cam.pos[0], p[1] - cam.pos[1], p[2] - cam.pos[2]))
@@ -93,8 +96,18 @@ def is_out(cam, wall):
     h_point = remake_h(h_point, -cam.ang_h, (0, 0, 0))
     h_point = remake_v(h_point, -cam.ang_v, (0, 0, 0))
     h_point = remake_s(h_point, -cam.ang_s, (0, 0, 0))
-    if h_point[2] < 0:
-        return 1
+    if key == 'w':
+        if h_point[2] < 0:
+            return 1
+    elif key == 'a':
+        if h_point[0] > 0:
+            return 1
+    elif key == 'd':
+        if h_point[0] < 0:
+            return 1
+    else:
+        if h_point[2] > 0:
+            return 1
     return 0
 
 

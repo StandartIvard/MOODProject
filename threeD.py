@@ -160,14 +160,12 @@ class Game:
                            self.sprites_of_hands_2, self.sprites_of_hands_1]
 
     def main_loop(self, window):
-        #print('ok')
         if self.qtacess:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
             keys = pygame.key.get_pressed()
             if keys[pygame.K_SPACE]:
-                print('________________________________________________')
                 if not self.shooting:
                     self.shooting = True
                     pygame.mixer.music.play()
@@ -176,7 +174,7 @@ class Game:
                 my_v = self.camera.move_vectors[0]
                 result_v = my_v
                 for v in self.stuck_polygons:
-                    if is_out(self.camera, v):
+                    if is_out(self.camera, v, 'w'):
                         continue
                     result_v = Vector((0, 0, 0))
                     if v[0][0] == v[1][0]:
@@ -189,42 +187,48 @@ class Game:
                 self.camera.move(result_v.cords)
             if keys[pygame.K_a]:
                 my_v = self.camera.move_vectors[1] * (-1)
-                result_v = Vector((0, 0, 0))
-                if len(self.stuck_polygons) == 0:
-                    result_v = result_v + my_v
+                result_v = my_v
                 for v in self.stuck_polygons:
-                    if v.cords[0] == 0:
+                    if is_out(self.camera, v, 'a'):
+                        continue
+                    result_v = Vector((0, 0, 0))
+                    if v[0][0] == v[1][0]:
                         ang = self.camera.ang_v
-                        result_v = result_v + v * sin(ang) * my_v.len()
                     else:
                         ang = self.camera.ang_v + (pi / 2)
-                        result_v = result_v + v * sin(ang) * my_v.len()
+                    buffer_vector = Vector(v[0]) - Vector(v[1])
+                    vector = buffer_vector * (1 / buffer_vector.len())
+                    result_v = result_v + vector * sin(ang) * my_v.len()
                 self.camera.move(result_v.cords)
             if keys[pygame.K_d]:
                 my_v = self.camera.move_vectors[1]
-                result_v = Vector((0, 0, 0))
-                if len(self.stuck_polygons) == 0:
-                    result_v = result_v + my_v
+                result_v = my_v
                 for v in self.stuck_polygons:
-                    if v.cords[0] == 0:
+                    if is_out(self.camera, v, 'd'):
+                        continue
+                    result_v = Vector((0, 0, 0))
+                    if v[0][0] == v[1][0]:
                         ang = -self.camera.ang_v
-                        result_v = result_v + v * sin(ang) * my_v.len()
                     else:
                         ang = -self.camera.ang_v - (pi / 2)
-                        result_v = result_v + v * sin(ang) * my_v.len()
+                    buffer_vector = Vector(v[0]) - Vector(v[1])
+                    vector = buffer_vector * (1 / buffer_vector.len())
+                    result_v = result_v + vector * sin(ang) * my_v.len()
                 self.camera.move(result_v.cords)
             if keys[pygame.K_s]:
                 my_v = self.camera.move_vectors[0] * (-1)
-                result_v = Vector((0, 0, 0))
-                if len(self.stuck_polygons) == 0:
-                    result_v = result_v + my_v
+                result_v = my_v
                 for v in self.stuck_polygons:
-                    if v.cords[0] == 0:
+                    if is_out(self.camera, v, 's'):
+                        continue
+                    result_v = Vector((0, 0, 0))
+                    if v[0][0] == v[1][0]:
                         ang = (pi / 2) + self.camera.ang_v
-                        result_v = result_v + v * sin(ang) * my_v.len()
                     else:
                         ang = self.camera.ang_v + pi
-                        result_v = result_v + v * sin(ang) * my_v.len()
+                    buffer_vector = Vector(v[0]) - Vector(v[1])
+                    vector = buffer_vector * (1 / buffer_vector.len())
+                    result_v = result_v + vector * sin(ang) * my_v.len()
                 self.camera.move(result_v.cords)
             if keys[pygame.K_LEFT]:
                 self.camera.turn_v(pi / 20)
