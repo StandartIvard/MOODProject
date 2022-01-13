@@ -29,14 +29,6 @@ class MainMenu(QWidget):
         self.label_2.adjustSize()
         self.label_3.adjustSize()
 
-        self.lineEdit_2.setEchoMode(QLineEdit.EchoMode.Password)
-        self.lineEdit_4.setEchoMode(QLineEdit.EchoMode.Password)
-        self.lineEdit_5.setEchoMode(QLineEdit.EchoMode.Password)
-
-        self.lineEdit_2.setText('')
-        self.lineEdit_4.setText('')
-        self.lineEdit_5.setText('')
-
         self.init_pygame(game)
 
         self.secondForm = SecondMenu(self.game)
@@ -60,7 +52,6 @@ class MainMenu(QWidget):
             self.secondForm.cont = False
             self.game.qtacess = True
             self.secondForm.hide()
-
 
     def play(self):
         name = self.lineEdit.text()
@@ -124,7 +115,7 @@ class SecondMenu(QWidget):
         self.score = 0
 
         self.pushButton.clicked.connect(self.changePass)
-        self.pushButton_2.clicked.connect(self.cont)
+        self.pushButton_2.clicked.connect(self.conti)
 
         self.cont = False
 
@@ -148,5 +139,5 @@ class SecondMenu(QWidget):
             alert = alertDialog("Ваш пароль успешно изменён")
             alert.exec_()
 
-    def cont(self):
+    def conti(self):
         self.cont = True

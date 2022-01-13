@@ -5,12 +5,26 @@ from math import pi, sin, cos
 from time import time
 import sys
 from funcForMap import translateMap
+from loadImage import load_hand_image
 
 
 class Game:
     pause = False
     qtacess = False
     h = 50
+    shooting = False
+    count = 0
+    indx = 1
+
+    playlist = [
+        './data/sounds/METALMUSICONE.wav',
+        './data/sounds/METALMUSICTWO.wav'
+    ]
+
+    pygame.mixer.init()
+    pygame.mixer.Channel(0).play(pygame.mixer.Sound('./data/sounds/METALMUSICONE.wav'))
+    pygame.mixer.Channel(0).set_volume(0.5)
+    pygame.mixer.Channel(0).queue(pygame.mixer.Sound('./data/sounds/METALMUSICTWO.wav'))
 
     def __init__(self):
         pygame.init()
@@ -35,7 +49,7 @@ class Game:
         self.screen = pygame.display.set_mode(size)
         self.screen.fill((0, 0, 0))
         self.running = True
-        self.camera = Camera((0, 1750, -(3**0.5) * 200 - 600), (0, 1750, -600))
+        self.camera = Camera((2000, 860, -(3**0.5) * 200 + 1500), (2000, 1750, 1500))
         self.terrain = []
         self.tecmap = 'mapName'
         for i in range(0, 15):
@@ -71,7 +85,87 @@ class Game:
         self.hole_points = []
         # self.hole_points.extend(self.cube)
         self.hole_points.extend(self.plane_map)
+
         self.stuck_polygons = []
+
+        self.sprites_of_hands_1 = pygame.sprite.Group()
+        print(len(self.hole_points))
+        sprite = pygame.sprite.Sprite()
+        sprite.image = load_hand_image("data/images/HandSprites/NormalHands.png")
+        sprite.rect = sprite.image.get_rect()
+        self.sprites_of_hands_1.add(sprite)
+        sprite.rect.x = 0
+        sprite.rect.y = 0
+
+        self.sprites_of_hands_2 = pygame.sprite.Group()
+        sprite = pygame.sprite.Sprite()
+        sprite.image = load_hand_image("data/images/HandSprites/SecondHands.png")
+        sprite.rect = sprite.image.get_rect()
+        self.sprites_of_hands_2.add(sprite)
+        sprite.rect.x = 0
+        sprite.rect.y = 0
+
+        self.sprites_of_hands_3 = pygame.sprite.Group()
+        sprite = pygame.sprite.Sprite()
+        sprite.image = load_hand_image("data/images/HandSprites/ThirdHands.png")
+        sprite.rect = sprite.image.get_rect()
+        self.sprites_of_hands_3.add(sprite)
+        sprite.rect.x = 0
+        sprite.rect.y = 0
+
+        self.sprites_of_hands_4 = pygame.sprite.Group()
+        sprite = pygame.sprite.Sprite()
+        sprite.image = load_hand_image("data/images/HandSprites/FourthHands.png")
+        sprite.rect = sprite.image.get_rect()
+        self.sprites_of_hands_4.add(sprite)
+        sprite.rect.x = 0
+        sprite.rect.y = 0
+
+        self.sprites_of_hands_5 = pygame.sprite.Group()
+        sprite = pygame.sprite.Sprite()
+        sprite.image = load_hand_image("data/images/HandSprites/FithHands.png")
+        sprite.rect = sprite.image.get_rect()
+        self.sprites_of_hands_5.add(sprite)
+        sprite.rect.x = 0
+        sprite.rect.y = 0
+
+        self.sprites_of_hands_6 = pygame.sprite.Group()
+        sprite = pygame.sprite.Sprite()
+        sprite.image = load_hand_image("data/images/HandSprites/SixthHands.png")
+        sprite.rect = sprite.image.get_rect()
+        self.sprites_of_hands_6.add(sprite)
+        sprite.rect.x = 0
+        sprite.rect.y = 0
+
+        self.sprites_of_hands_7 = pygame.sprite.Group()
+        sprite = pygame.sprite.Sprite()
+        sprite.image = load_hand_image("data/images/HandSprites/SeventhHands.png")
+        sprite.rect = sprite.image.get_rect()
+        self.sprites_of_hands_7.add(sprite)
+        sprite.rect.x = 0
+        sprite.rect.y = 0
+
+        self.sprites_of_hands_8 = pygame.sprite.Group()
+        sprite = pygame.sprite.Sprite()
+        sprite.image = load_hand_image("data/images/HandSprites/EighthHands.png")
+        sprite.rect = sprite.image.get_rect()
+        self.sprites_of_hands_8.add(sprite)
+        sprite.rect.x = 0
+        sprite.rect.y = 0
+
+        self.scope = pygame.sprite.Group()
+        sprite = pygame.sprite.Sprite()
+        sprite.image = load_hand_image("data/images/scope.png")
+        sprite.rect = sprite.image.get_rect()
+        self.scope.add(sprite)
+        sprite.rect.x = 0
+        sprite.rect.y = 0
+
+        self.handGroups = [self.sprites_of_hands_1, self.sprites_of_hands_2, self.sprites_of_hands_3,
+                           self.sprites_of_hands_4, self.sprites_of_hands_5, self.sprites_of_hands_6,
+                           self.sprites_of_hands_7, self.sprites_of_hands_8, self.sprites_of_hands_7,
+                           self.sprites_of_hands_6, self.sprites_of_hands_5, self.sprites_of_hands_4,
+                           self.sprites_of_hands_2, self.sprites_of_hands_1]
 
     def main_loop(self, window):
         #print('ok')
@@ -82,6 +176,10 @@ class Game:
             keys = pygame.key.get_pressed()
             if keys[pygame.K_SPACE]:
                 print('________________________________________________')
+                if not self.shooting:
+                    self.shooting = True
+                    pygame.mixer.Channel(1).play(pygame.mixer.Sound('./data/sounds/ShootingSound.wav'))
+
             if keys[pygame.K_w]:
                 my_v = self.camera.move_vectors[0]
                 result_v = Vector((0, 0, 0))
@@ -172,6 +270,17 @@ class Game:
                 if square != [(1, 1), (1, 1), (1, 1), (1, 1)]:
                     pygame.draw.polygon(self.screen, point[2], square)
             pygame.draw.circle(self.screen, pygame.Color('red'), mc([(0, 0, 0)], self.camera)[0], 5)
+
+            if self.shooting:
+                if self.count == 13:
+                    self.count = 0
+                    self.shooting = False
+                else:
+                    self.count += self.indx
+
+            self.handGroups[self.count].draw(self.screen)
+            self.scope.draw(self.screen)
+
             pygame.display.flip()
             self.screen.fill((0, 0, 0))
             pygame.time.Clock().tick(100)
