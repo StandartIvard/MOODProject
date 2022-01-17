@@ -1,6 +1,19 @@
 from py3d import polygon_center, dist
 
 
+def create_map(name):
+    f = open('./data/maps/' + name + '.txt')
+    mapList = f.readlines()
+    cords = list()
+    for i in range(len(mapList)):
+        mapList[i] = ''.join(mapList[i].split())
+        temp = mapList[i]
+        temp.split()
+        temp = map(int, temp)
+        cords.append(temp)
+    return cords
+
+
 def translateMap(name, cam, color):
     f = open('./data/maps/' + name + '.txt')
     mapList = f.readlines()
