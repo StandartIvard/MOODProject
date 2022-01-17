@@ -4,7 +4,6 @@ from MainMenuClass import MainMenu
 from threeD import Game
 
 from PyQt5.QtWidgets import *
-
 import sys
 
 

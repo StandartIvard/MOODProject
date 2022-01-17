@@ -1,6 +1,6 @@
 from math import sin, cos
 
-size = [1400, 800]
+size = [1440, 900] #1440 900
 CENTER = (size[0] / 2, size[1] / 2, 0)
 
 

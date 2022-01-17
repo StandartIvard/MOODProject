@@ -46,7 +46,9 @@ class Game:
         self.clr4 = pygame.Color('white')
         self.clr5 = pygame.Color('yellow')
         self.clr6 = pygame.Color('pink')
-        self.screen = pygame.display.set_mode(size)
+        self.screen = pygame.display.set_mode((0, 0))
+        W, H = self.screen.get_size()
+        print(W, H)
         self.screen.fill((0, 0, 0))
         self.running = True
         self.camera = Camera((2000, 800, -(3**0.5) * 200 + 1500), (2000, 800, 1500))
