@@ -1,6 +1,6 @@
 from math import sin, cos
 
-size = [900, 600]
+size = [1400, 800]
 CENTER = (size[0] / 2, size[1] / 2, 0)
 
 
@@ -55,7 +55,7 @@ class Camera:
         self.cur_field = remake_s(self.cur_field, -self.ang_s, (0, 0, 0))
         self.cur_field = remake_v(self.cur_field, -self.ang_v, (0, 0, 0))
         self.cur_field = remake_h(self.cur_field, -self.ang_h, (0, 0, 0))
-        self.move_vectors = [Vector((0, 0, 60)), Vector((60, 0, 0))]
+        self.move_vectors = [Vector((0, 0, 100)), Vector((100, 0, 0))]
 
     def turn_h(self, rad):
         self.field = remake_h(self.field, rad, self.pos)

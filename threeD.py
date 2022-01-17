@@ -56,12 +56,6 @@ class Game:
         cur_map = translateMap(self.tecmap, self.camera, self.clr3)
         self.plane_map = []
         self.plane_map.extend(cur_map)
-        self.cube = [([self.p1, self.p5, self.p6, self.p2], dist(self.camera.pos, polygon_center([self.p1, self.p5, self.p6, self.p2])), self.clr1),
-                    ([self.p4, self.p8, self.p7, self.p3], dist(self.camera.pos, polygon_center([self.p4, self.p8, self.p7, self.p3])), self.clr2),
-                    ([self.p1, self.p5, self.p8, self.p4], dist(self.camera.pos, polygon_center([self.p1, self.p5, self.p8, self.p4])), self.clr3),
-                    ([self.p2, self.p6, self.p7, self.p3], dist(self.camera.pos, polygon_center([self.p2, self.p6, self.p7, self.p3])), self.clr4),
-                    ([self.p1, self.p2, self.p3, self.p4], dist(self.camera.pos, polygon_center([self.p1, self.p2, self.p3, self.p4])), self.clr5),
-                    ([self.p5, self.p6, self.p7, self.p8], dist(self.camera.pos, polygon_center([self.p5, self.p6, self.p7, self.p8])), self.clr6)]
 
         self.hole_points = []
         # self.hole_points.extend(self.cube)
@@ -222,9 +216,9 @@ class Game:
                     result_v = result_v + vector * sin(ang) * my_v.len()
                 self.camera.move(result_v.cords)
             if keys[pygame.K_LEFT]:
-                self.camera.turn_v(pi / 20)
+                self.camera.turn_v(pi / 12)
             if keys[pygame.K_RIGHT]:
-                self.camera.turn_v(-pi / 20)
+                self.camera.turn_v(-pi / 12)
             if keys[pygame.K_ESCAPE]:
                 self.qtacess = False
                 self.pause = True
