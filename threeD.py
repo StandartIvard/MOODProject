@@ -48,10 +48,13 @@ class Game:
         self.clr6 = pygame.Color('pink')
         self.screen = pygame.display.set_mode((0, 0))
         W, H = self.screen.get_size()
-        print(W, H)
+        self.screen = pygame.display.set_mode((W, H))
+        global size
+        size = (W, H)
+
         self.screen.fill((0, 0, 0))
         self.running = True
-        self.camera = Camera((2000, 800, -(3**0.5) * 200 + 1500), (2000, 800, 1500))
+        self.camera = Camera((2000, 800, -(3**0.5) * 200 + 1500), (2000, 800, 1500), size)
         self.terrain = []
         self.tecmap = 'mapName'
         self.clr3 = pygame.Color((27, 0, 0))
@@ -70,72 +73,72 @@ class Game:
         sprite.image = load_hand_image("data/images/HandSprites/NormalHands.png")
         sprite.rect = sprite.image.get_rect()
         self.sprites_of_hands_1.add(sprite)
-        sprite.rect.x = 0
-        sprite.rect.y = 0
+        sprite.rect.x = 150
+        sprite.rect.y = 100
 
         self.sprites_of_hands_2 = pygame.sprite.Group()
         sprite = pygame.sprite.Sprite()
         sprite.image = load_hand_image("data/images/HandSprites/SecondHands.png")
         sprite.rect = sprite.image.get_rect()
         self.sprites_of_hands_2.add(sprite)
-        sprite.rect.x = 0
-        sprite.rect.y = 0
+        sprite.rect.x = 150
+        sprite.rect.y = 100
 
         self.sprites_of_hands_3 = pygame.sprite.Group()
         sprite = pygame.sprite.Sprite()
         sprite.image = load_hand_image("data/images/HandSprites/ThirdHands.png")
         sprite.rect = sprite.image.get_rect()
         self.sprites_of_hands_3.add(sprite)
-        sprite.rect.x = 0
-        sprite.rect.y = 0
+        sprite.rect.x = 150
+        sprite.rect.y = 100
 
         self.sprites_of_hands_4 = pygame.sprite.Group()
         sprite = pygame.sprite.Sprite()
         sprite.image = load_hand_image("data/images/HandSprites/FourthHands.png")
         sprite.rect = sprite.image.get_rect()
         self.sprites_of_hands_4.add(sprite)
-        sprite.rect.x = 0
-        sprite.rect.y = 0
+        sprite.rect.x = 150
+        sprite.rect.y = 100
 
         self.sprites_of_hands_5 = pygame.sprite.Group()
         sprite = pygame.sprite.Sprite()
         sprite.image = load_hand_image("data/images/HandSprites/FithHands.png")
         sprite.rect = sprite.image.get_rect()
         self.sprites_of_hands_5.add(sprite)
-        sprite.rect.x = 0
-        sprite.rect.y = 0
+        sprite.rect.x = 150
+        sprite.rect.y = 100
 
         self.sprites_of_hands_6 = pygame.sprite.Group()
         sprite = pygame.sprite.Sprite()
         sprite.image = load_hand_image("data/images/HandSprites/SixthHands.png")
         sprite.rect = sprite.image.get_rect()
         self.sprites_of_hands_6.add(sprite)
-        sprite.rect.x = 0
-        sprite.rect.y = 0
+        sprite.rect.x = 150
+        sprite.rect.y = 100
 
         self.sprites_of_hands_7 = pygame.sprite.Group()
         sprite = pygame.sprite.Sprite()
         sprite.image = load_hand_image("data/images/HandSprites/SeventhHands.png")
         sprite.rect = sprite.image.get_rect()
         self.sprites_of_hands_7.add(sprite)
-        sprite.rect.x = 0
-        sprite.rect.y = 0
+        sprite.rect.x = 150
+        sprite.rect.y = 100
 
         self.sprites_of_hands_8 = pygame.sprite.Group()
         sprite = pygame.sprite.Sprite()
         sprite.image = load_hand_image("data/images/HandSprites/EighthHands.png")
         sprite.rect = sprite.image.get_rect()
         self.sprites_of_hands_8.add(sprite)
-        sprite.rect.x = 0
-        sprite.rect.y = 0
+        sprite.rect.x = 150
+        sprite.rect.y = 100
 
         self.scope = pygame.sprite.Group()
         sprite = pygame.sprite.Sprite()
         sprite.image = load_hand_image("data/images/scope.png")
         sprite.rect = sprite.image.get_rect()
         self.scope.add(sprite)
-        sprite.rect.x = 0
-        sprite.rect.y = 0
+        sprite.rect.x = 150
+        sprite.rect.y = 100
 
         self.handGroups = [self.sprites_of_hands_1, self.sprites_of_hands_2, self.sprites_of_hands_3,
                            self.sprites_of_hands_4, self.sprites_of_hands_5, self.sprites_of_hands_6,
@@ -270,7 +273,24 @@ class Game:
             self.handGroups[self.count].draw(self.screen)
             self.scope.draw(self.screen)
 
+            #            ---------------------------------------------------------------
+            #                       INTERFACE
+            #            ---------------------------------------------------------------
+
+                                  #  UPPER POLYGON
+            pygame.draw.polygon(self.screen, pygame.Color('black'), [(0, 0), (size[0], 0), (size[0], 100), (0, 100)])
+
+                                  #  LOWER POLYGON
+            pygame.draw.polygon(self.screen, pygame.Color('black'), [(0, size[1]), (0, size[1] - 200), (size[0], size[1] - 200), (size[0], size[1])])
+
+                                  #  LEFT POLYGON
+            pygame.draw.polygon(self.screen, pygame.Color('black'), [(0, 0), (150, 0), (150, size[1]), (0, size[1])])
+
+                                  #  RIGHT POLYGON
+            pygame.draw.polygon(self.screen, pygame.Color('black'), [(size[0], 0), (size[0] - 150, 0), (size[0] - 150, size[1]), (size[0], size[1])])
+
             pygame.display.flip()
             self.screen.fill((0, 0, 0))
             pygame.time.Clock().tick(100)
+
             return False

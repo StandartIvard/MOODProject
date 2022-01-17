@@ -42,7 +42,9 @@ class Vector:
 
 
 class Camera:
-    def __init__(self, pos=(0, 0, 0), field=(0, 0, 1), ang_vert=0, ang_hor=0, ang_st=0):
+    def __init__(self, pos=(0, 0, 0), field=(0, 0, 1), tsize=[1440, 900], ang_vert=0, ang_hor=0, ang_st=0):
+        global size
+        size = tsize
         self.field = field
         self.pos = pos
         self.ang_v = ang_vert
