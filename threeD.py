@@ -52,6 +52,8 @@ class Game:
         global size
         size = (W, H)
 
+        self.HP = 100
+
         self.LR = (W - 900) // 2
         self.UD = (H - 600) // 2
 
@@ -293,7 +295,12 @@ class Game:
             pygame.draw.polygon(self.screen, pygame.Color((26, 26, 26)), [(size[0], 0), (size[0] - self.LR, 0), (size[0] - self.LR, size[1]), (size[0], size[1])])
 
                                   #  HP UNDERBAR
-            pygame.draw.polygon(self.screen, pygame.Color((0, 0, 0)), [(size[0] // 20, size[1] - self.UD - 20), (size[0] // 2, size[1] - self.UD - 20), (size[0] // 2, size[1] - (self.UD + 20) // 2), (size[0] // 20, size[1] - (self.UD + 20) // 2)])
+            pygame.draw.polygon(self.screen, pygame.Color((0, 255, 0)), [(size[0] // 20, size[1] - self.UD - 20), (size[0] // 2, size[1] - self.UD - 20), (size[0] // 2, size[1] - (self.UD + 20) // 2), (size[0] // 20, size[1] - (self.UD + 20) // 2)])
+
+            size_x = size[0] // 2 - size[0] // 20
+
+                                  #  HP BAR
+            pygame.draw.polygon(self.screen, pygame.Color((255, 0, 0)), [(size[0] // 20, size[1] - self.UD - 20), ((size_x / 100) * self.HP + size[0] // 20, size[1] - self.UD - 20), ((size_x / 100) * self.HP + size[0] // 20, size[1] - (self.UD + 20) // 2), (size[0] // 20, size[1] - (self.UD + 20) // 2)])
 
             pygame.display.flip()
             self.screen.fill((0, 0, 0))

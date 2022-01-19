@@ -72,6 +72,7 @@ class MainMenu(QWidget):
             self.game.qtacess = True
             self.game.pause = False
             self.hide()
+            self.game.HP = result[0][3]
             self.name = result[0][0]
 
     def register(self):
