@@ -4,8 +4,9 @@ from py3d import Camera, size, remake_s, remake_h, remake_v, dist, polygon_cente
 from math import pi, sin, cos
 from time import time
 import sys
-from funcForMap import translateMap
+from funcForMap import translateMap, create_map
 from loadImage import load_hand_image
+from AI import Enemy
 
 
 class Game:
@@ -62,6 +63,12 @@ class Game:
         self.hole_points.extend(self.plane_map)
 
         self.stuck_polygons = []
+        im = pygame.image.load('data/images/alien_test.png')
+        print('0')
+        test_monster = Enemy((5, 7), im, create_map(self.tecmap))
+        print('1')
+        self.hole_points.append([test_monster.cords, 10000, test_monster])
+        print('2')
 
         self.sprites_of_hands_1 = pygame.sprite.Group()
         sprite = pygame.sprite.Sprite()
@@ -226,37 +233,45 @@ class Game:
             self.stuck_polygons = []
             for point in self.hole_points:
                 ind = self.hole_points.index(point)
-                cur_color = self.hole_points[ind][2]
-                cur_dist = dist(self.camera.pos, polygon_center(self.hole_points[ind][0]))
-                cur_vector = abs(Vector(Vector(point[0][0]) - Vector(point[0][1])))
-                if point[0][0][1] == point[0][2][1]:
-                    plane_dist = 600
-                elif point[0][0][0] == point[0][1][0]:
-                    if point[0][0][2] >= self.camera.pos[2] >= point[0][1][2] or point[0][0][2] <= self.camera.pos[2] <= point[0][1][2]:
-                        plane_dist = abs(point[0][0][0] - self.camera.pos[0])
+                if point[3] == 0:
+                    cur_color = self.hole_points[ind][2]
+                    cur_dist = dist(self.camera.pos, polygon_center(self.hole_points[ind][0]))
+                    cur_vector = abs(Vector(Vector(point[0][0]) - Vector(point[0][1])))
+                    if point[0][0][1] == point[0][2][1]:
+                        plane_dist = 600
+                    elif point[0][0][0] == point[0][1][0]:
+                        if point[0][0][2] >= self.camera.pos[2] >= point[0][1][2] or point[0][0][2] <= self.camera.pos[2] <= point[0][1][2]:
+                            plane_dist = abs(point[0][0][0] - self.camera.pos[0])
+                        else:
+                            plane_dist = 600
+                    elif point[0][0][2] == point[0][1][2]:
+                        if point[0][0][0] >= self.camera.pos[0] >= point[0][1][0] or point[0][0][0] <= self.camera.pos[0] <= point[0][1][0]:
+                            plane_dist = abs(point[0][0][2] - self.camera.pos[2])
+                        else:
+                            plane_dist = 600
                     else:
                         plane_dist = 600
-                elif point[0][0][2] == point[0][1][2]:
-                    if point[0][0][0] >= self.camera.pos[0] >= point[0][1][0] or point[0][0][0] <= self.camera.pos[0] <= point[0][1][0]:
-                        plane_dist = abs(point[0][0][2] - self.camera.pos[2])
-                    else:
-                        plane_dist = 600
-                else:
-                    plane_dist = 600
-                cur_color.hsva = (cur_color.hsva[0], cur_color.hsva[1],
-                                  max(0.01, min(1, 400 / cur_dist)) * 100,
-                                  cur_color.hsva[3])
-                self.hole_points[ind] = (self.hole_points[ind][0], cur_dist, cur_color)
-                if plane_dist < 575:
-                    try:
-                        if self.stuck_polygons[0] != cur_vector and self.stuck_polygons[1] != cur_vector:
+                    cur_color.hsva = (cur_color.hsva[0], cur_color.hsva[1],
+                                      max(0.01, min(1, 400 / cur_dist)) * 100,
+                                      cur_color.hsva[3])
+                    self.hole_points[ind] = (self.hole_points[ind][0], cur_dist, cur_color)
+                    if plane_dist < 575:
+                        try:
+                            if self.stuck_polygons[0] != cur_vector and self.stuck_polygons[1] != cur_vector:
+                                self.stuck_polygons.append(point[0])
+                        except Exception:
                             self.stuck_polygons.append(point[0])
-                    except Exception:
-                        self.stuck_polygons.append(point[0])
-                square = mc(point[0], self.camera)
-                if square != [(1, 1), (1, 1), (1, 1), (1, 1)]:
-                    pygame.draw.polygon(self.screen, point[2], square)
-            pygame.draw.circle(self.screen, pygame.Color('red'), mc([(0, 0, 0)], self.camera)[0], 5)
+                    square = mc(point[0], self.camera)
+                    if square != [(1, 1), (1, 1), (1, 1), (1, 1)]:
+                        pygame.draw.polygon(self.screen, point[2], square)
+                else:
+                    print('3')
+                    cur_dist = dist(point[0], self.camera.pos)
+                    print('4')
+                    self.hole_points[ind][1] = cur_dist
+                    print('5')
+                    point[2].draw(point[0], self.camera)
+                    print('6')
 
             if self.shooting:
                 if self.count == 13:

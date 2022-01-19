@@ -168,14 +168,14 @@ def mc2(p, cam):
     try:
         coefficient = cur_field[2] / cur_p[2]
     except ZeroDivisionError:
-        return [(1, 1), (1, 1), (1, 1), (1, 1)]
+        return (-1, -1)
     x = cur_p[0] * coefficient
     y = cur_p[1] * coefficient
     pc = (x, y, 0)
     y = size[1] - y
     ans = (x + CENTER[0], y - CENTER[1])
     if dist(pc, (0, 0, 0)) > (2**0.5) * 1000:
-        return [(1, 1), (1, 1), (1, 1), (1, 1)]
+        return (-1, -1)
     return ans
 
 

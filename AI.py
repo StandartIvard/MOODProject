@@ -1,5 +1,6 @@
-from py3d import Vector, Camera, mc, polygon_center
+from py3d import Vector, Camera, mc, polygon_center, remake_h, remake_v, remake_s
 import pygame
+from py3d import size as screen_size
 
 
 def manh_dist(p1, p2):
@@ -7,14 +8,14 @@ def manh_dist(p1, p2):
 
 
 class Enemy:
-    def __init__(self, cords, texture, plane, size):
+    def __init__(self, cords, texture, plane):
         self.cur_position = cords
         self.cords = (self.cur_position[1] * 500, 0, self.cur_position[0] * 500)
         self.texture = texture
         self.path = (0, 0, 0)
         self.plane = plane
         self.next_pos = self.cur_position
-        self.size = size
+        self.size = (texture.get_width, texture.get_height)
 
     def find_path(self, target):
         try:
@@ -54,6 +55,22 @@ class Enemy:
                 self.cur_position = self.next_pos
 
     def draw(self, pos, cam):
-        stand_point = ((pos[2][0] - pos[3][0]) / 2, 0, (pos[2][2] - pos[3][2]) / 2)
-        surf_pos = mc(stand_point, cam)
-        sc = (surf_pos[0] - self.texture.get_width / 2, surf_pos[1] - self.texture.get_height)
+        pol_c = (pos[0], pos[1] + self.texture.get_height / 2, pos[2])
+        cur_p = (pol_c[0] - cam.pos[0], pol_c[1] - cam.pos[1], pol_c[2] - cam.pos[2])
+        cur_p = remake_v(cur_p, -cam.ang_v, (0, 0, 0))
+        cur_p = remake_h(cur_p, -cam.ang_h, (0, 0, 0))
+        cur_p = remake_s(cur_p, -cam.ang_s, (0, 0, 0))
+        if mc(pol_c, cam) != (-1, -1):
+            coef = cam.cur_field[2] / cur_p[2]
+        else:
+            return None
+        w = Vector(Vector(pos[0]) - Vector(pos[1])).len()
+        h = Vector(Vector(pos[0]) - Vector(pos[3])).len()
+        w *= coef
+        h *= coef
+        cur_sprite = pygame.sprite.Sprite()
+        cur_sprite.image = pygame.transform.scale(self.texture, (w, h))
+        cur_sprite.rect = cur_sprite.image.get_rect()
+        all_sprites = pygame.sprite.Group()
+        all_sprites.add(cur_sprite)
+        all_sprites.update()
