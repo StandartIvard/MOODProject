@@ -53,6 +53,7 @@ class Game:
         size = (W, H)
 
         self.HP = 100
+        self.score = 0
 
         self.LR = (W - 900) // 2
         self.UD = (H - 600) // 2
@@ -143,7 +144,7 @@ class Game:
         sprite.rect = sprite.image.get_rect()
         self.scope.add(sprite)
         sprite.rect.x = self.LR
-        sprite.rect.y = self.UD - 40
+        sprite.rect.y = self.UD
 
         self.handGroups = [self.sprites_of_hands_1, self.sprites_of_hands_2, self.sprites_of_hands_3,
                            self.sprites_of_hands_4, self.sprites_of_hands_5, self.sprites_of_hands_6,
@@ -151,6 +152,14 @@ class Game:
                            self.sprites_of_hands_6, self.sprites_of_hands_5, self.sprites_of_hands_4,
                            self.sprites_of_hands_2, self.sprites_of_hands_1]
         print(len(self.plane_map))
+
+    def draw_te(self, surf, text, size, x, y):
+        font_name = pygame.font.match_font('arial')
+        font = pygame.font.Font(font_name, size)
+        text_surface = font.render(text, True, pygame.Color((255, 255, 255)))
+        text_rect = text_surface.get_rect()
+        text_rect.midtop = (x, y)
+        surf.blit(text_surface, text_rect)
 
     def main_loop(self, window):
         if self.qtacess:
@@ -295,12 +304,15 @@ class Game:
             pygame.draw.polygon(self.screen, pygame.Color((26, 26, 26)), [(size[0], 0), (size[0] - self.LR, 0), (size[0] - self.LR, size[1]), (size[0], size[1])])
 
                                   #  HP UNDERBAR
-            pygame.draw.polygon(self.screen, pygame.Color((0, 255, 0)), [(size[0] // 20, size[1] - self.UD - 20), (size[0] // 2, size[1] - self.UD - 20), (size[0] // 2, size[1] - (self.UD + 20) // 2), (size[0] // 20, size[1] - (self.UD + 20) // 2)])
+            pygame.draw.polygon(self.screen, pygame.Color((100, 100, 100)), [(size[0] // 20, size[1] - self.UD - 20), (size[0] // 2, size[1] - self.UD - 20), (size[0] // 2, size[1] - (self.UD + 20) // 2), (size[0] // 20, size[1] - (self.UD + 20) // 2)])
 
             size_x = size[0] // 2 - size[0] // 20
 
                                   #  HP BAR
-            pygame.draw.polygon(self.screen, pygame.Color((255, 0, 0)), [(size[0] // 20, size[1] - self.UD - 20), ((size_x / 100) * self.HP + size[0] // 20, size[1] - self.UD - 20), ((size_x / 100) * self.HP + size[0] // 20, size[1] - (self.UD + 20) // 2), (size[0] // 20, size[1] - (self.UD + 20) // 2)])
+            pygame.draw.polygon(self.screen, pygame.Color((0, 255, 0)), [(size[0] // 20, size[1] - self.UD - 20), ((size_x / 100) * self.HP + size[0] // 20, size[1] - self.UD - 20), ((size_x / 100) * self.HP + size[0] // 20, size[1] - (self.UD + 20) // 2), (size[0] // 20, size[1] - (self.UD + 20) // 2)])
+
+                                  #  score
+            self.draw_te(self.screen, str(self.score), 100, (size[0] / 2) + size[0] / 5, size[1] - self.UD - 20)
 
             pygame.display.flip()
             self.screen.fill((0, 0, 0))

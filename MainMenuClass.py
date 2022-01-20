@@ -40,6 +40,11 @@ class MainMenu(QWidget):
         self.timer.start(0)
 
     def pygame_loop(self):
+        if self.game.qtacess:
+            result = getInformDB(self.name)
+
+            self.game.HP = result[0][3]
+            self.game.score = result[0][2]
         if self.game.main_loop(self):
             self.close()
         if self.game.pause:
@@ -74,6 +79,7 @@ class MainMenu(QWidget):
             self.hide()
             self.game.HP = result[0][3]
             self.name = result[0][0]
+            self.game.score = result[0][2]
 
     def register(self):
         name = self.lineEdit_3.text()
