@@ -15,7 +15,7 @@ class Enemy:
         self.path = (0, 0, 0)
         self.plane = plane
         self.next_pos = self.cur_position
-        self.size = (texture.get_width, texture.get_height)
+        self.size = texture.get_rect().size
 
     def find_path(self, target):
         try:
@@ -55,7 +55,8 @@ class Enemy:
                 self.cur_position = self.next_pos
 
     def draw(self, pos, cam):
-        pol_c = (pos[0], pos[1] + self.texture.get_height / 2, pos[2])
+        print(self.size)
+        pol_c = (pos[0], pos[1] + self.size[1] / 2, pos[2])
         cur_p = (pol_c[0] - cam.pos[0], pol_c[1] - cam.pos[1], pol_c[2] - cam.pos[2])
         cur_p = remake_v(cur_p, -cam.ang_v, (0, 0, 0))
         cur_p = remake_h(cur_p, -cam.ang_h, (0, 0, 0))
@@ -64,8 +65,8 @@ class Enemy:
             coef = cam.cur_field[2] / cur_p[2]
         else:
             return None
-        w = Vector(Vector(pos[0]) - Vector(pos[1])).len()
-        h = Vector(Vector(pos[0]) - Vector(pos[3])).len()
+        w = Vector(Vector(pos) - Vector(pos)).len()
+        h = Vector(Vector(pos) - Vector(pos)).len()
         w *= coef
         h *= coef
         cur_sprite = pygame.sprite.Sprite()

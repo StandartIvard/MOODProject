@@ -67,7 +67,7 @@ class Game:
         print('0')
         test_monster = Enemy((5, 7), im, create_map(self.tecmap))
         print('1')
-        self.hole_points.append([test_monster.cords, 10000, test_monster])
+        self.hole_points.append([test_monster.cords, 10000, test_monster, 1])
         print('2')
 
         self.sprites_of_hands_1 = pygame.sprite.Group()
