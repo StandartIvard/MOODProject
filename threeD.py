@@ -23,7 +23,7 @@ class Game:
 
     pygame.mixer.init()
     pygame.mixer.Channel(0).play(pygame.mixer.Sound('./data/sounds/METALMUSICONE.wav'))
-    pygame.mixer.Channel(0).set_volume(0.5)
+    pygame.mixer.Channel(0).set_volume(0)
     pygame.mixer.Channel(0).queue(pygame.mixer.Sound('./data/sounds/METALMUSICTWO.wav'))
 
     def __init__(self):
@@ -145,6 +145,14 @@ class Game:
         self.scope.add(sprite)
         sprite.rect.x = self.LR
         sprite.rect.y = self.UD
+
+        self.sides = pygame.sprite.Group()
+        sprite = pygame.sprite.Sprite()
+        sprite.image = load_hand_image("data/images/sides.png")
+        sprite.rect = sprite.image.get_rect()
+        self.scope.add(sprite)
+        sprite.rect.x = -510 + (510 - self.LR) + 20
+        sprite.rect.y = -240 + (240 - self.UD)
 
         self.handGroups = [self.sprites_of_hands_1, self.sprites_of_hands_2, self.sprites_of_hands_3,
                            self.sprites_of_hands_4, self.sprites_of_hands_5, self.sprites_of_hands_6,
@@ -292,16 +300,16 @@ class Game:
             #            ---------------------------------------------------------------
 
                                   #  UPPER POLYGON
-            pygame.draw.polygon(self.screen, pygame.Color((26, 26, 26)), [(0, 0), (size[0], 0), (size[0], self.UD - 50), (0, self.UD - 50)])
+            #pygame.draw.polygon(self.screen, pygame.Color((26, 26, 26)), [(0, 0), (size[0], 0), (size[0], self.UD - 50), (0, self.UD - 50)])
 
                                   #  LOWER POLYGON
-            pygame.draw.polygon(self.screen, pygame.Color((26, 26, 26)), [(0, size[1]), (0, size[1] - self.UD - 50), (size[0], size[1] - self.UD - 50), (size[0], size[1])])
+            #pygame.draw.polygon(self.screen, pygame.Color((26, 26, 26)), [(0, size[1]), (0, size[1] - self.UD - 50), (size[0], size[1] - self.UD - 50), (size[0], size[1])])
 
                                   #  LEFT POLYGON
-            pygame.draw.polygon(self.screen, pygame.Color((26, 26, 26)), [(0, 0), (self.LR, 0), (self.LR, size[1]), (0, size[1])])
+            #pygame.draw.polygon(self.screen, pygame.Color((26, 26, 26)), [(0, 0), (self.LR, 0), (self.LR, size[1]), (0, size[1])])
 
                                   #  RIGHT POLYGON
-            pygame.draw.polygon(self.screen, pygame.Color((26, 26, 26)), [(size[0], 0), (size[0] - self.LR, 0), (size[0] - self.LR, size[1]), (size[0], size[1])])
+            #pygame.draw.polygon(self.screen, pygame.Color((26, 26, 26)), [(size[0], 0), (size[0] - self.LR, 0), (size[0] - self.LR, size[1]), (size[0], size[1])])
 
                                   #  HP UNDERBAR
             pygame.draw.polygon(self.screen, pygame.Color((100, 100, 100)), [(size[0] // 20, size[1] - self.UD - 20), (size[0] // 2, size[1] - self.UD - 20), (size[0] // 2, size[1] - (self.UD + 20) // 2), (size[0] // 20, size[1] - (self.UD + 20) // 2)])
@@ -313,6 +321,8 @@ class Game:
 
                                   #  score
             self.draw_te(self.screen, str(self.score), 100, (size[0] / 2) + size[0] / 5, size[1] - self.UD - 20)
+
+            self.sides.draw(self.screen)
 
             pygame.display.flip()
             self.screen.fill((0, 0, 0))
