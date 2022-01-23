@@ -5,7 +5,7 @@ from math import pi, sin, cos
 from time import time
 import sys
 from funcForMap import translateMap, create_map
-from loadImage import load_hand_image
+from loadImage import load_hand_image, load_enemy_image
 from AI import Enemy
 
 
@@ -64,7 +64,7 @@ class Game:
         self.hole_points.extend(self.plane_map)
 
         self.stuck_polygons = []
-        im = load_hand_image('data/images/alien_test.png')
+        im = load_enemy_image('data/images/alien_test.png')
         print('0')
         self.test_monster = Enemy((5, 8), im, create_map(self.tecmap))
         print('1')
