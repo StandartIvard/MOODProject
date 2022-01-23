@@ -51,6 +51,7 @@ class Game:
         self.screen.fill((0, 0, 0))
         self.running = True
         self.camera = Camera((2000, 800, -(3**0.5) * 200 + 1500), (2000, 800, 1500))
+        print(self.camera.cur_position)
         self.terrain = []
         self.tecmap = 'mapName'
         self.clr3 = pygame.Color((27, 0, 0))
@@ -63,11 +64,11 @@ class Game:
         self.hole_points.extend(self.plane_map)
 
         self.stuck_polygons = []
-        im = pygame.image.load('data/images/alien_test.png')
+        im = load_hand_image('data/images/alien_test.png')
         print('0')
-        test_monster = Enemy((5, 7), im, create_map(self.tecmap))
+        self.test_monster = Enemy((5, 8), im, create_map(self.tecmap))
         print('1')
-        self.hole_points.append([test_monster.cords, 10000, test_monster, 1])
+        self.hole_points.append([self.test_monster.cords, 10000, self.test_monster, 1])
         print('2')
 
         self.sprites_of_hands_1 = pygame.sprite.Group()
@@ -254,7 +255,7 @@ class Game:
                     cur_color.hsva = (cur_color.hsva[0], cur_color.hsva[1],
                                       max(0.01, min(1, 400 / cur_dist)) * 100,
                                       cur_color.hsva[3])
-                    self.hole_points[ind] = (self.hole_points[ind][0], cur_dist, cur_color)
+                    self.hole_points[ind] = [self.hole_points[ind][0], cur_dist, cur_color, 0]
                     if plane_dist < 575:
                         try:
                             if self.stuck_polygons[0] != cur_vector and self.stuck_polygons[1] != cur_vector:
@@ -265,13 +266,13 @@ class Game:
                     if square != [(1, 1), (1, 1), (1, 1), (1, 1)]:
                         pygame.draw.polygon(self.screen, point[2], square)
                 else:
-                    print('3')
                     cur_dist = dist(point[0], self.camera.pos)
-                    print('4')
                     self.hole_points[ind][1] = cur_dist
-                    print('5')
-                    point[2].draw(point[0], self.camera)
-                    print('6')
+                    point[2].draw(point[0], self.camera, self.screen)
+                    if cur_dist > 600:
+                        point[2].find_path(self.camera)
+                        point[2].move()
+                    point[0] = point[2].cords
 
             if self.shooting:
                 if self.count == 13:
@@ -282,7 +283,7 @@ class Game:
 
             self.handGroups[self.count].draw(self.screen)
             self.scope.draw(self.screen)
-
+            pygame.draw.circle(self.screen, pygame.Color('white'), mc(self.test_monster.cords, self.camera), 5)
             pygame.display.flip()
             self.screen.fill((0, 0, 0))
             pygame.time.Clock().tick(100)

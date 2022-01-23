@@ -9,7 +9,7 @@ def create_map(name):
         mapList[i] = ''.join(mapList[i].split())
         temp = mapList[i]
         temp.split()
-        temp = map(int, temp)
+        temp = list(map(int, temp))
         cords.append(temp)
     return cords
 

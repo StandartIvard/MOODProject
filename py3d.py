@@ -56,7 +56,7 @@ class Camera:
         self.cur_field = remake_v(self.cur_field, -self.ang_v, (0, 0, 0))
         self.cur_field = remake_h(self.cur_field, -self.ang_h, (0, 0, 0))
         self.move_vectors = [Vector((0, 0, 100)), Vector((100, 0, 0))]
-        self.cur_position = (self.pos[2] // 500, self.pos[0] // 500)
+        self.cur_position = (self.pos[2] // 500 - 1, self.pos[0] // 500 - 1)
 
     def turn_h(self, rad):
         self.field = remake_h(self.field, rad, self.pos)
@@ -83,6 +83,7 @@ class Camera:
         xf = self.field[0] + v[0]
         yf = self.field[1] + v[1]
         zf = self.field[2] + v[2]
+        self.cur_position = (self.pos[2] // 500 - 1, self.pos[0] // 500 - 1)
         self.pos = (xp, yp, zp)
         self.field = (xf, yf, zf)
 
@@ -164,7 +165,7 @@ def mc2(p, cam):
     cur_p = remake_v(cur_p, -cam.ang_v, (0, 0, 0))
     cur_field = cam.cur_field
     if cur_p[2] < 0 or dist(cur_p, (0, 0, 0)) < 10:
-        return [(1, 1), (1, 1), (1, 1), (1, 1)]
+        return (-1, -1)
     try:
         coefficient = cur_field[2] / cur_p[2]
     except ZeroDivisionError:
