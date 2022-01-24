@@ -10,6 +10,7 @@ def create_map(name):
         temp = mapList[i]
         temp.split()
         temp = list(map(int, temp))
+        temp.reverse()
         cords.append(temp)
     return cords
 

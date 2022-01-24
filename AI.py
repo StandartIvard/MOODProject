@@ -4,7 +4,8 @@ from py3d import size as screen_size
 
 
 def manh_dist(p1, p2):
-    return abs(p1[0] - p2[0]) + abs(p1[1] - p2[1])
+    m = min(abs(p1[0] - p2[0]), abs(p1[1] - p2[1]))
+    return m * 1.41 + max(abs(p1[0] - p2[0]), abs(p1[1] - p2[1])) - m
 
 
 class Enemy:
@@ -18,44 +19,27 @@ class Enemy:
         self.size = texture.get_rect().size
 
     def find_path(self, target):
-        """print('11')
-        try:
-            k = (self.cur_position[1] - target.cur_position[1]) / (self.cur_position[0] - target.cur_position[0])
-            if (self.cur_position[0] < target.cur_position[0] and k < 0):
-                next_pos = (self.cur_position[0] + 1, self.cur_position[1] + 1)
-            elif (self.cur_position[0] < target.cur_position[0] and k > 0):
-                next_pos = (self.cur_position[0] + 1, self.cur_position[1] - 1)
-            elif (self.cur_position[0] > target.cur_position[0] and k < 0):
-                next_pos = (self.cur_position[0] - 1, self.cur_position[1] + 1)
-            elif (self.cur_position[0] > target.cur_position[0] and k > 0):
-                next_pos = (self.cur_position[0] - 1, self.cur_position[1] - 1)
-            elif k == 0 and self.cur_position[0] > target.cur_position[0]:
-                next_pos = (self.cur_position[0] - 1, self.cur_position[1])
-            else:
-                next_pos = (self.cur_position[0] + 1, self.cur_position[1])
-        except ZeroDivisionError:
-            if self.cur_position[1] > target.cur_position[1]:
-                next_pos = (self.cur_position[0] - 1, self.cur_position[1])
-            else:
-                next_pos = (self.cur_position[0] + 1, self.cur_position[1])"""
         next_pos = (10000, 10000)
         for i in [-1, 0, 1]:
             for j in [-1, 0, 1]:
-                if self.plane[self.cur_position[0] + i][self.cur_position[1] + j] == 0 and manh_dist(target.cur_position, (self.cur_position[0] + i, self.cur_position[1] + j)) < manh_dist(next_pos, target.cur_position):
-                    if self.plane[self.cur_position[0] + i * 2][self.cur_position[1] + j] == 0:
-                        if self.plane[self.cur_position[0] + i][self.cur_position[1] + j * 2] == 0:
-                            if self.plane[self.cur_position[0] + i * 2][self.cur_position[1] + j * 2] == 0:
-                                next_pos = (self.cur_position[0] + i, self.cur_position[1] + j)
+                if i == 0 and j == 0:
+                    continue
+                next_cords = (self.cords[0] + i * 50, 0, self.cords[2] + j * 50)
+                if self.plane[next_cords[2] // 500][next_cords[0] // 500] == 0:
+                    if manh_dist(target.cur_position, (self.cur_position[0] + i, self.cur_position[1] + j)) < manh_dist(next_pos, target.cur_position):
+                            next_pos = (self.cur_position[0] + i, self.cur_position[1] + j)
         self.next_pos = next_pos
+        print(target.cur_position)
 
     def move(self):
         v1 = Vector((self.next_pos[1], 0, self.next_pos[0]))
         v2 = Vector((self.cur_position[1], 0, self.cur_position[0]))
         mv = Vector(v1 - v2) * 25
         self.cords = (self.cords[0] + mv[0], self.cords[1] + mv[1], self.cords[2] + mv[2])
-        if self.next_pos[0] * 500 <= self.cords[2] <= self.next_pos[0] * 500 + 500:
+        self.cur_position = (self.cords[2] // 500, self.cords[0] // 500)
+        """if self.next_pos[0] * 500 <= self.cords[2] <= self.next_pos[0] * 500 + 500:
             if self.next_pos[1] * 500 <= self.cords[0] <= self.next_pos[1] * 500 + 500:
-                self.cur_position = self.next_pos
+                self.cur_position = self.next_pos"""
         #self.plane[self.cur_position[0]][self.cur_position[1]] = -1
         print(self.next_pos, self.cur_position, self.cords)
 

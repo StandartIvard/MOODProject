@@ -65,11 +65,14 @@ class Game:
 
         self.stuck_polygons = []
         im = load_enemy_image('data/images/alien_test.png')
-        print('0')
         self.test_monster = Enemy((5, 8), im, create_map(self.tecmap))
-        print('1')
         self.hole_points.append([self.test_monster.cords, 10000, self.test_monster, 1])
-        print('2')
+
+        cm = create_map(self.tecmap)
+        for i in range(len(cm)):
+            for j in range(len(cm[i])):
+                if 0 < i < len(cm) - 1 and 0 < j < len(cm[i]) - 1 and cm[i][j] != 0:
+                    print((i, j))
 
         self.sprites_of_hands_1 = pygame.sprite.Group()
         sprite = pygame.sprite.Sprite()
@@ -154,6 +157,7 @@ class Game:
         if self.qtacess:
             keys = pygame.key.get_pressed()
             if keys[pygame.K_SPACE]:
+                self.running = False
                 if not self.shooting:
                     self.shooting = True
                     pygame.mixer.Channel(1).play(pygame.mixer.Sound('./data/sounds/ShootingSound.wav'))
