@@ -151,8 +151,8 @@ class Game:
         sprite.image = load_hand_image("data/images/sides.png")
         sprite.rect = sprite.image.get_rect()
         self.scope.add(sprite)
-        sprite.rect.x = -510 + (510 - self.LR) + 20
-        sprite.rect.y = -240 + (240 - self.UD - 30)
+        sprite.rect.x = -1 * (510 - self.LR)
+        sprite.rect.y = -1 * (240 - self.UD + 50)
 
         self.handGroups = [self.sprites_of_hands_1, self.sprites_of_hands_2, self.sprites_of_hands_3,
                            self.sprites_of_hands_4, self.sprites_of_hands_5, self.sprites_of_hands_6,
