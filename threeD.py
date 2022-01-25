@@ -64,9 +64,14 @@ class Game:
         self.hole_points.extend(self.plane_map)
 
         self.stuck_polygons = []
+        self.din_map = create_map(self.tecmap)
+        self.din_map[6][4] = -1
+        self.din_map[6][12] = -2
         im = load_enemy_image('data/images/alien_test.png')
-        self.test_monster = Enemy((5, 8), im, create_map(self.tecmap))
-        self.hole_points.append([self.test_monster.cords, 10000, self.test_monster, 1])
+        self.test_monster1 = Enemy((6, 4), im, self.din_map, -1)
+        self.hole_points.append([self.test_monster1.cords, 10000, self.test_monster1, 1])
+        self.test_monster2 = Enemy((6, 12), im, self.din_map, -2)
+        self.hole_points.append([self.test_monster2.cords, 10000, self.test_monster2, 1])
 
         cm = create_map(self.tecmap)
         for i in range(len(cm)):
@@ -155,6 +160,7 @@ class Game:
 
     def main_loop(self, window):
         if self.qtacess:
+            print('---')
             keys = pygame.key.get_pressed()
             if keys[pygame.K_SPACE]:
                 self.running = False
@@ -270,6 +276,7 @@ class Game:
                     if square != [(1, 1), (1, 1), (1, 1), (1, 1)]:
                         pygame.draw.polygon(self.screen, point[2], square)
                 else:
+                    point[2].plane = self.din_map
                     cur_dist = dist(point[0], self.camera.pos)
                     self.hole_points[ind][1] = cur_dist
                     point[2].draw(point[0], self.camera, self.screen)
@@ -277,17 +284,18 @@ class Game:
                         point[2].find_path(self.camera)
                         point[2].move()
                     point[0] = point[2].cords
-
+                    self.din_map = point[2].plane
+                    print('1')
+            print('2')
             if self.shooting:
                 if self.count == 13:
                     self.count = 0
                     self.shooting = False
                 else:
                     self.count += self.indx
-
+            print('3')
             self.handGroups[self.count].draw(self.screen)
             self.scope.draw(self.screen)
-            pygame.draw.circle(self.screen, pygame.Color('white'), mc(self.test_monster.cords, self.camera), 5)
             pygame.display.flip()
             self.screen.fill((0, 0, 0))
             pygame.time.Clock().tick(100)
