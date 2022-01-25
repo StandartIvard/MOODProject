@@ -322,6 +322,8 @@ class Game:
                         point[2].find_path(self.camera)
                         point[2].move()
                         point[2].hit_count = 0
+                    if point[2].hit_count >= len(point[2].hit_textures) / 2:
+                        self.HP -= 10
                     point[0] = point[2].cords
                     self.din_map = point[2].plane
             if self.shooting:
