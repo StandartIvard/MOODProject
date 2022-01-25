@@ -78,10 +78,12 @@ class Game:
         self.din_map = create_map(self.tecmap)
         self.din_map[6][4] = -1
         self.din_map[6][12] = -2
-        im = load_enemy_image('data/images/alien_test.png')
-        self.test_monster1 = Enemy((6, 4), im, self.din_map, -1)
+        im1 = load_enemy_image('data/images/alien_test.png')
+        im2 = load_enemy_image('data/images/alien_test_hit1.png')
+        im3 = load_enemy_image('data/images/alien_test_hit2.png')
+        self.test_monster1 = Enemy((6, 4), [im1, im2, im3, im2], self.din_map, -1)
         self.hole_points.append([self.test_monster1.cords, 10000, self.test_monster1, 1])
-        self.test_monster2 = Enemy((6, 12), im, self.din_map, -2)
+        self.test_monster2 = Enemy((6, 12), [im1, im2, im3, im2], self.din_map, -2)
         self.hole_points.append([self.test_monster2.cords, 10000, self.test_monster2, 1])
 
         cm = create_map(self.tecmap)
@@ -306,9 +308,22 @@ class Game:
                     self.hole_points[ind][1] = cur_dist
                     point[2].draw(point[0], self.camera, self.screen)
                     cam_pos = (self.camera.pos[0], 0, self.camera.pos[2])
-                    if dist(cam_pos, point[2].cords) > 600:
+                    if dist(cam_pos, point[2].cords) > 900:
+                        point[2].hitting = False
+                    elif point[2].hit_count >= len(point[2].hit_textures) * 2:
+                        point[2].hitting = False
+                    else:
+                        point[2].hitting = True
+                    if point[2].hitting == True:
+                        point[2].texture = point[2].hit_textures[point[2].hit_count // 2]
+                        point[2].hit_count += 1
+                    else:
+                        point[2].texture = point[2].hole_textures[0]
                         point[2].find_path(self.camera)
                         point[2].move()
+                        point[2].hit_count = 0
+                    if point[2].hit_count >= len(point[2].hit_textures) / 2:
+                        self.HP -= 10
                     point[0] = point[2].cords
                     self.din_map = point[2].plane
             if self.shooting:

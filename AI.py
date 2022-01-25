@@ -12,12 +12,16 @@ class Enemy:
     def __init__(self, cords, texture, plane, id):
         self.cur_position = cords
         self.cords = (self.cur_position[1] * 500, 0, self.cur_position[0] * 500)
-        self.texture = texture
+        self.texture = texture[0]
+        self.hit_textures = texture[1:]
         self.path = (0, 0, 0)
+        self.hole_textures = texture
         self.plane = plane
         self.next_pos = self.cur_position
-        self.size = texture.get_rect().size
+        self.size = self.texture.get_rect().size
         self.id = id
+        self.hitting = False
+        self.hit_counter = 0
 
     def find_path(self, target):
         next_pos = self.cur_position
