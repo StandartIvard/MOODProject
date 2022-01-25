@@ -148,7 +148,7 @@ class Game:
 
         self.sides = pygame.sprite.Group()
         sprite = pygame.sprite.Sprite()
-        sprite.image = load_hand_image("data/images/sides3.png")
+        sprite.image = load_hand_image("data/images/sides1.png")
         sprite.rect = sprite.image.get_rect()
         self.scope.add(sprite)
         sprite.rect.x = -1 * (510 - self.LR)
