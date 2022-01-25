@@ -19,22 +19,24 @@ class Enemy:
         self.size = texture.get_rect().size
 
     def find_path(self, target):
-        next_pos = (10000, 10000)
+        next_pos = self.cur_position
+        bn = (100, 100)
         for i in [-1, 0, 1]:
             for j in [-1, 0, 1]:
-                if i == 0 and j == 0:
-                    continue
                 next_cords = (self.cords[0] + i * 50, 0, self.cords[2] + j * 50)
+                print(next_cords)
                 if self.plane[next_cords[2] // 500][next_cords[0] // 500] == 0:
-                    if manh_dist(target.cur_position, (self.cur_position[0] + i, self.cur_position[1] + j)) < manh_dist(next_pos, target.cur_position):
-                            next_pos = (self.cur_position[0] + i, self.cur_position[1] + j)
+                    if manh_dist(target.cur_position, (self.cur_position[0] + j, self.cur_position[1] + i)) < manh_dist((self.cur_position[0] + next_pos[0], self.cur_position[1] + next_pos[1]), target.cur_position):
+                            next_pos = (j, i)
+                            bn = next_cords
         self.next_pos = next_pos
+        print(bn)
         print(target.cur_position)
 
     def move(self):
         v1 = Vector((self.next_pos[1], 0, self.next_pos[0]))
         v2 = Vector((self.cur_position[1], 0, self.cur_position[0]))
-        mv = Vector(v1 - v2) * 25
+        mv = Vector((self.next_pos[1], 0, self.next_pos[0])) * 25
         self.cords = (self.cords[0] + mv[0], self.cords[1] + mv[1], self.cords[2] + mv[2])
         self.cur_position = (self.cords[2] // 500, self.cords[0] // 500)
         """if self.next_pos[0] * 500 <= self.cords[2] <= self.next_pos[0] * 500 + 500:
