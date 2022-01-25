@@ -160,7 +160,6 @@ class Game:
 
     def main_loop(self, window):
         if self.qtacess:
-            print('---')
             keys = pygame.key.get_pressed()
             if keys[pygame.K_SPACE]:
                 self.running = False
@@ -280,20 +279,18 @@ class Game:
                     cur_dist = dist(point[0], self.camera.pos)
                     self.hole_points[ind][1] = cur_dist
                     point[2].draw(point[0], self.camera, self.screen)
-                    if cur_dist > 600:
+                    cam_pos = (self.camera.pos[0], 0, self.camera.pos[2])
+                    if dist(cam_pos, point[2].cords) > 600:
                         point[2].find_path(self.camera)
                         point[2].move()
                     point[0] = point[2].cords
                     self.din_map = point[2].plane
-                    print('1')
-            print('2')
             if self.shooting:
                 if self.count == 13:
                     self.count = 0
                     self.shooting = False
                 else:
                     self.count += self.indx
-            print('3')
             self.handGroups[self.count].draw(self.screen)
             self.scope.draw(self.screen)
             pygame.display.flip()
