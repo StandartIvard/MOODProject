@@ -4,8 +4,9 @@ from py3d import Camera, size, remake_s, remake_h, remake_v, dist, polygon_cente
 from math import pi, sin, cos
 from time import time
 import sys
-from funcForMap import translateMap
-from loadImage import load_hand_image
+from funcForMap import translateMap, create_map
+from loadImage import load_hand_image, load_enemy_image
+from AI import Enemy
 
 
 class Game:
@@ -23,7 +24,7 @@ class Game:
 
     pygame.mixer.init()
     pygame.mixer.Channel(0).play(pygame.mixer.Sound('./data/sounds/METALMUSICONE.wav'))
-    pygame.mixer.Channel(0).set_volume(0)
+    pygame.mixer.Channel(0).set_volume(0.5)
     pygame.mixer.Channel(0).queue(pygame.mixer.Sound('./data/sounds/METALMUSICTWO.wav'))
 
     def __init__(self):
@@ -60,7 +61,8 @@ class Game:
 
         self.screen.fill((0, 0, 0))
         self.running = True
-        self.camera = Camera((2000, 800, -(3**0.5) * 200 + 1500), (2000, 800, 1500), size)
+        self.camera = Camera((2000, 800, -(3**0.5) * 200 + 1500), (2000, 800, 1500))
+        print(self.camera.cur_position)
         self.terrain = []
         self.tecmap = 'mapName'
         self.clr3 = pygame.Color((27, 0, 0))
@@ -73,6 +75,20 @@ class Game:
         self.hole_points.extend(self.plane_map)
 
         self.stuck_polygons = []
+        self.din_map = create_map(self.tecmap)
+        self.din_map[6][4] = -1
+        self.din_map[6][12] = -2
+        im = load_enemy_image('data/images/alien_test.png')
+        self.test_monster1 = Enemy((6, 4), im, self.din_map, -1)
+        self.hole_points.append([self.test_monster1.cords, 10000, self.test_monster1, 1])
+        self.test_monster2 = Enemy((6, 12), im, self.din_map, -2)
+        self.hole_points.append([self.test_monster2.cords, 10000, self.test_monster2, 1])
+
+        cm = create_map(self.tecmap)
+        for i in range(len(cm)):
+            for j in range(len(cm[i])):
+                if 0 < i < len(cm) - 1 and 0 < j < len(cm[i]) - 1 and cm[i][j] != 0:
+                    print((i, j))
 
         self.sprites_of_hands_1 = pygame.sprite.Group()
         sprite = pygame.sprite.Sprite()
@@ -253,38 +269,48 @@ class Game:
             self.stuck_polygons = []
             for point in self.hole_points:
                 ind = self.hole_points.index(point)
-                cur_color = self.hole_points[ind][2]
-                cur_dist = dist(self.camera.pos, polygon_center(self.hole_points[ind][0]))
-                cur_vector = abs(Vector(Vector(point[0][0]) - Vector(point[0][1])))
-                if point[0][0][1] == point[0][2][1]:
-                    plane_dist = 600
-                elif point[0][0][0] == point[0][1][0]:
-                    if point[0][0][2] >= self.camera.pos[2] >= point[0][1][2] or point[0][0][2] <= self.camera.pos[2] <= point[0][1][2]:
-                        plane_dist = abs(point[0][0][0] - self.camera.pos[0])
+                if point[3] == 0:
+                    cur_color = self.hole_points[ind][2]
+                    cur_dist = dist(self.camera.pos, polygon_center(self.hole_points[ind][0]))
+                    cur_vector = abs(Vector(Vector(point[0][0]) - Vector(point[0][1])))
+                    if point[0][0][1] == point[0][2][1]:
+                        plane_dist = 600
+                    elif point[0][0][0] == point[0][1][0]:
+                        if point[0][0][2] >= self.camera.pos[2] >= point[0][1][2] or point[0][0][2] <= self.camera.pos[2] <= point[0][1][2]:
+                            plane_dist = abs(point[0][0][0] - self.camera.pos[0])
+                        else:
+                            plane_dist = 600
+                    elif point[0][0][2] == point[0][1][2]:
+                        if point[0][0][0] >= self.camera.pos[0] >= point[0][1][0] or point[0][0][0] <= self.camera.pos[0] <= point[0][1][0]:
+                            plane_dist = abs(point[0][0][2] - self.camera.pos[2])
+                        else:
+                            plane_dist = 600
                     else:
                         plane_dist = 600
-                elif point[0][0][2] == point[0][1][2]:
-                    if point[0][0][0] >= self.camera.pos[0] >= point[0][1][0] or point[0][0][0] <= self.camera.pos[0] <= point[0][1][0]:
-                        plane_dist = abs(point[0][0][2] - self.camera.pos[2])
-                    else:
-                        plane_dist = 600
-                else:
-                    plane_dist = 600
-                cur_color.hsva = (cur_color.hsva[0], cur_color.hsva[1],
-                                  max(0.01, min(1, 400 / cur_dist)) * 100,
-                                  cur_color.hsva[3])
-                self.hole_points[ind] = (self.hole_points[ind][0], cur_dist, cur_color)
-                if plane_dist < 575:
-                    try:
-                        if self.stuck_polygons[0] != cur_vector and self.stuck_polygons[1] != cur_vector:
+                    cur_color.hsva = (cur_color.hsva[0], cur_color.hsva[1],
+                                      max(0.01, min(1, 400 / cur_dist)) * 100,
+                                      cur_color.hsva[3])
+                    self.hole_points[ind] = [self.hole_points[ind][0], cur_dist, cur_color, 0]
+                    if plane_dist < 575:
+                        try:
+                            if self.stuck_polygons[0] != cur_vector and self.stuck_polygons[1] != cur_vector:
+                                self.stuck_polygons.append(point[0])
+                        except Exception:
                             self.stuck_polygons.append(point[0])
-                    except Exception:
-                        self.stuck_polygons.append(point[0])
-                square = mc(point[0], self.camera)
-                if square != [(1, 1), (1, 1), (1, 1), (1, 1)]:
-                    pygame.draw.polygon(self.screen, point[2], square)
-            pygame.draw.circle(self.screen, pygame.Color('red'), mc([(0, 0, 0)], self.camera)[0], 5)
-
+                    square = mc(point[0], self.camera)
+                    if square != [(1, 1), (1, 1), (1, 1), (1, 1)]:
+                        pygame.draw.polygon(self.screen, point[2], square)
+                else:
+                    point[2].plane = self.din_map
+                    cur_dist = dist(point[0], self.camera.pos)
+                    self.hole_points[ind][1] = cur_dist
+                    point[2].draw(point[0], self.camera, self.screen)
+                    cam_pos = (self.camera.pos[0], 0, self.camera.pos[2])
+                    if dist(cam_pos, point[2].cords) > 600:
+                        point[2].find_path(self.camera)
+                        point[2].move()
+                    point[0] = point[2].cords
+                    self.din_map = point[2].plane
             if self.shooting:
                 if self.count == 13:
                     self.count = 0

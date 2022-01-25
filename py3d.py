@@ -58,6 +58,7 @@ class Camera:
         self.cur_field = remake_v(self.cur_field, -self.ang_v, (0, 0, 0))
         self.cur_field = remake_h(self.cur_field, -self.ang_h, (0, 0, 0))
         self.move_vectors = [Vector((0, 0, 100)), Vector((100, 0, 0))]
+        self.cur_position = (self.pos[2] // 500 - 1, self.pos[0] // 500 - 1)
 
     def turn_h(self, rad):
         self.field = remake_h(self.field, rad, self.pos)
@@ -84,6 +85,7 @@ class Camera:
         xf = self.field[0] + v[0]
         yf = self.field[1] + v[1]
         zf = self.field[2] + v[2]
+        self.cur_position = (self.pos[2] // 500 - 1, self.pos[0] // 500 - 1)
         self.pos = (xp, yp, zp)
         self.field = (xf, yf, zf)
 
@@ -154,7 +156,33 @@ def remake_s(p, rad, c):
     return (x + c[0], y + c[1], z + c[2])
 
 
-def mc(p1, cam):
+def mc2(p, cam):
+    minus = 0
+    x = p[0] - cam.pos[0]
+    y = p[1] - cam.pos[1]
+    z = p[2] - cam.pos[2]
+    cur_p = (x, y, z)
+    cur_p = remake_h(cur_p, -cam.ang_h, (0, 0, 0))
+    cur_p = remake_s(cur_p, -cam.ang_s, (0, 0, 0))
+    cur_p = remake_v(cur_p, -cam.ang_v, (0, 0, 0))
+    cur_field = cam.cur_field
+    if cur_p[2] < 0 or dist(cur_p, (0, 0, 0)) < 10:
+        return (-1, -1)
+    try:
+        coefficient = cur_field[2] / cur_p[2]
+    except ZeroDivisionError:
+        return (-1, -1)
+    x = cur_p[0] * coefficient
+    y = cur_p[1] * coefficient
+    pc = (x, y, 0)
+    y = size[1] - y
+    ans = (x + CENTER[0], y - CENTER[1])
+    if dist(pc, (0, 0, 0)) > (2**0.5) * 1000:
+        return (-1, -1)
+    return ans
+
+
+def mc1(p1, cam):
     ans = []
     pc = []
     for p in p1:
@@ -181,3 +209,10 @@ def mc(p1, cam):
     if dist(polygon_center(pc), (0, 0, 0)) > (2**0.5) * 1000:
         return [(1, 1), (1, 1), (1, 1), (1, 1)]
     return ans
+
+
+def mc(p, cam):
+    try:
+        return mc1(p, cam)
+    except Exception:
+        return mc2(p, cam)
