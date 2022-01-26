@@ -30,7 +30,7 @@ class MainMenu(QWidget):
 
         self.init_pygame(game)
 
-        self.secondForm = SecondMenu(self.game)
+        self.secondForm = deadScreen(self.game)
 
     def init_pygame(self, game):
         self.game = game
@@ -48,10 +48,10 @@ class MainMenu(QWidget):
         if self.game.main_loop(self):
             self.close()
         if self.game.pause:
-            self.secondForm.name = self.name
+            #self.secondForm.name = self.name
             self.secondForm.show()
-            self.secondForm.label.setText("Имя персонажа: " + self.secondForm.name)
-            self.secondForm.label_2.setText("Очков: " + str(self.secondForm.score))
+            #self.secondForm.label.setText("Имя персонажа: " + self.secondForm.name)
+            #self.secondForm.label_2.setText("Очков: " + str(self.secondForm.score))
         if self.secondForm.cont:
             self.game.pause = False
             self.secondForm.cont = False
@@ -147,4 +147,26 @@ class SecondMenu(QWidget):
             alert.exec_()
 
     def conti(self):
+        self.cont = True
+
+
+class deadScreen(QWidget):
+
+    def __init__(self, game, parent=None):
+        super().__init__(parent)
+        loadUi(".//data/winScreen.ui", self)
+        oImage = QImage("data/images/background_win_screen.jpg")
+        sImage = oImage.scaled(QSize(1429, 450))
+        palette = QPalette()
+        palette.setBrush(10, QBrush(sImage))
+        self.setPalette(palette)
+
+        self.name = ""
+        self.score = 0
+
+        self.pushButton.clicked.connect(self.next)
+
+        self.cont = False
+
+    def next(self):
         self.cont = True
