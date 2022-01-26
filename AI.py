@@ -27,6 +27,7 @@ class Enemy:
         self.l_90_run = texture[5]
         self.r_90_run = texture[6]
         self.death_run = texture[7]
+        self.stunned = 0
         self.stop_run = texture[0]
         self.lp = (0, 0, 0)
         self.run_count = 0

@@ -5,6 +5,7 @@ from py3d import Camera, size, remake_s, remake_h, remake_v, dist, polygon_cente
 from math import pi, sin, cos
 from time import time
 import sys
+from funcForWorkWithDB import updateHP
 from funcForMap import translateMap, create_map
 from loadImage import load_hand_image, load_enemy_image
 from AI import Enemy
@@ -202,7 +203,7 @@ class Game:
         sprite.rect = sprite.image.get_rect()
         self.scope.add(sprite)
         sprite.rect.x = self.LR
-        sprite.rect.y = self.UD
+        sprite.rect.y = self.UD + 100
 
         self.sides = pygame.sprite.Group()
         sprite = pygame.sprite.Sprite()
@@ -229,15 +230,14 @@ class Game:
 
     def main_loop(self, window):
         if self.qtacess:
-            print('111')
             keys = pygame.key.get_pressed()
             if keys[pygame.K_SPACE]:
                 if not self.shooting:
                     self.shooting = True
                     if self.current_target[3] == 1:
-                        print('1')
                         self.current_target[2].hitpoints -= self.damage
                         self.current_target[2].texture = self.current_target[2].death_run[0]
+                        self.current_target[2].stunned = 1
                         print(self.current_target[2].hitpoints)
                     else:
                         print('-1')
@@ -357,6 +357,11 @@ class Game:
                     cur_dist = dist(point[0], self.camera.pos)
                     self.hole_points[ind][1] = cur_dist
                     point[2].draw(point[0], self.camera, self.screen)
+                    if 0 < point[2].stunned < 4:
+                        point[2].stunned += 1
+                        continue
+                    else:
+                        point[2].stunned = 0
                     cam_pos = (self.camera.pos[0], 0, self.camera.pos[2])
                     if dist(cam_pos, point[2].cords) > 900:
                         point[2].hitting = False
@@ -392,7 +397,7 @@ class Game:
                     point[0] = point[2].cords
                     self.din_map = point[2].plane
                     screen_pos = mc(point[2].cords, self.camera)
-                    if 400 <= screen_pos[1] <= 500:
+                    if size[0] // 2 - 100 <= screen_pos[0] <= size[0] // 2 + 100:
                         self.current_target = point
             if self.shooting:
                 if self.count == 13:
@@ -400,7 +405,9 @@ class Game:
                     self.shooting = False
                 else:
                     self.count += self.indx
-
+            print('1')
+            updateHP(self.name, self.HP)
+            print('2')
             self.handGroups[self.count].draw(self.screen)
             self.scope.draw(self.screen)
 
