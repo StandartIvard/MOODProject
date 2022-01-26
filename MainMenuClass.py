@@ -7,6 +7,7 @@ from PyQt5.uic import loadUi
 from funcForWorkWithDB import getInformDB, insertUserDB, updatePassword, updateHP, getTime
 from uniAlertDialog import alertDialog
 from passwordChangeDialog import passwordDialog
+import sys
 
 
 class MainMenu(QWidget):
@@ -81,6 +82,8 @@ class MainMenu(QWidget):
         if self.game.ended:
             self.resDialog = resultDialog()
             self.resDialog.exec_()
+            sys.exit()
+
 
     def play(self):
         name = self.lineEdit.text()
