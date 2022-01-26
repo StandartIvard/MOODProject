@@ -89,7 +89,10 @@ class Game:
         im7 = load_enemy_image('data/images/enemys/enemy_move_2_1.png')
         im8 = load_enemy_image('data/images/enemys/enemy_move_3_1.png')
         im9 = load_enemy_image('data/images/enemys/enemy_move_4_1.png')
-        imr6 = im6.
+        im6r = load_enemy_image('data/images/enemys/enemy_move_1_2_r.png')
+        im7r = load_enemy_image('data/images/enemys/enemy_move_2_1_r.png')
+        im8r = load_enemy_image('data/images/enemys/enemy_move_3_1_r.png')
+        im9r = load_enemy_image('data/images/enemys/enemy_move_4_1_r.png')
         self.test_monster1 = Enemy((6, 4), [im1, [im3, im4, im5], [im1, im2, im13, im14]], self.din_map, -1)
         self.hole_points.append([self.test_monster1.cords, 10000, self.test_monster1, 1])
         self.test_monster2 = Enemy((6, 12), [im1, [im3, im4, im5], [im1, im2]], self.din_map, -2)
