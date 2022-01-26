@@ -31,5 +31,5 @@ def updateHP(name, HP):
 def updateScore(name, score):
     con = sqlite3.connect('data/usersDB.db')
     cur = con.cursor()
-    cur.execute("UPDATE users SET HP = " + score + " WHERE username = '" + name + "';")
+    cur.execute("UPDATE users SET score = " + score + " WHERE username = '" + name + "';")
     con.commit()
