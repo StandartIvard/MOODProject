@@ -110,7 +110,7 @@ class Game:
         self.hole_points.append([self.test_monster1.cords, 10000, self.test_monster1, 1])
         self.test_monster2 = Enemy((6, 12), self.monster_sprites, self.din_map, -2)
         self.hole_points.append([self.test_monster2.cords, 10000, self.test_monster2, 1])
-        self.is_on_second_level = True
+        self.is_on_second_level = False
         cm = create_map(self.tecmap)
         self.current_target = self.hole_points[0]
         self.sprites_of_hands_1 = pygame.sprite.Group()
@@ -198,7 +198,6 @@ class Game:
                            self.sprites_of_hands_7, self.sprites_of_hands_8, self.sprites_of_hands_7,
                            self.sprites_of_hands_6, self.sprites_of_hands_5, self.sprites_of_hands_4,
                            self.sprites_of_hands_2, self.sprites_of_hands_1]
-        print(len(self.plane_map))
 
     def second_level_change(self):
         self.camera = Camera((3000, 800, -(3**0.5) * 200 + 1500), (3000, 800, 1500))
