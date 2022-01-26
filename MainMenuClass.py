@@ -13,9 +13,6 @@ class MainMenu(QWidget):
         super().__init__(parent)
         loadUi(".//data/MainMenu.ui", self)
 
-        self.pixmap = QPixmap('data/images/logo.png')
-        self.label.setPixmap(self.pixmap)
-
         oImage = QImage("data/images/Background.png")
         sImage = oImage.scaled(QSize(1429, 450))
         palette = QPalette()
