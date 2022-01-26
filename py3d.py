@@ -1,7 +1,19 @@
-from math import sin, cos
+from math import sin, cos, acos, pi
 
 size = [1440, 900] #1440 900
 CENTER = (size[0] / 2, size[1] / 2, 0)
+
+
+def find_angle(p1, p2, cam):
+    point1 = (p1[0] - p2[0], 0, p1[2] - p2[2])
+    point1 = remake_v(point1, -cam.ang_v, (0, 0, 0))
+    point1 = remake_h(point1, -cam.ang_h, (0, 0, 0))
+    point1 = remake_s(point1, -cam.ang_s, (0, 0, 0))
+    try:
+        cs = point1[0] / dist(point1, (0, 0, 0))
+    except ZeroDivisionError:
+        return pi / 2
+    return acos(cs)
 
 
 class Vector:

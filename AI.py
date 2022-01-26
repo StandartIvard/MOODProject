@@ -23,8 +23,9 @@ class Enemy:
         self.f_run = texture[2]
         self.l_45_run = texture[3]
         self.r_45_run = texture[4]
-        self.l_90run = texture[5]
+        self.l_90_run = texture[5]
         self.r_90_run = texture[6]
+        self.lp = (0, 0, 0)
         self.run_count = 0
         self.id = id
         self.hitting = False
@@ -44,6 +45,7 @@ class Enemy:
 
     def move(self):
         self.plane[self.cur_position[0]][self.cur_position[1]] = 0
+        self.lp = self.cords
         v1 = Vector((self.next_pos[1], 0, self.next_pos[0]))
         v2 = Vector((self.cur_position[1], 0, self.cur_position[0]))
         mv = Vector((self.next_pos[1], 0, self.next_pos[0])) * 50

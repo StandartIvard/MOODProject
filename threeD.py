@@ -1,6 +1,6 @@
 import pygame
 from math import pi
-from py3d import Camera, size, remake_s, remake_h, remake_v, dist, polygon_center, mc, Vector, is_out
+from py3d import Camera, size, remake_s, remake_h, remake_v, dist, polygon_center, mc, Vector, is_out, find_angle
 from math import pi, sin, cos
 from time import time
 import sys
@@ -80,8 +80,8 @@ class Game:
         self.din_map[6][12] = -2
         im1 = load_enemy_image('data/images/enemys/enemy_move_1.png')
         im2 = load_enemy_image('data/images/enemys/enemy_move_2.png')
-        im13 = load_enemy_image('data/images/enemys/enemy_move_3.png')
-        im14 = load_enemy_image('data/images/enemys/enemy_move_4.png')
+        im3r = load_enemy_image('data/images/enemys/enemy_move_3.png')
+        im4r = load_enemy_image('data/images/enemys/enemy_move_4.png')
         im3 = load_enemy_image('data/images/enemys/enemy_move_5.png')
         im4 = load_enemy_image('data/images/enemys/enemy_move_6.png')
         im5 = load_enemy_image('data/images/enemys/enemy_move_7.png')
@@ -93,9 +93,27 @@ class Game:
         im7r = load_enemy_image('data/images/enemys/enemy_move_2_1_r.png')
         im8r = load_enemy_image('data/images/enemys/enemy_move_3_1_r.png')
         im9r = load_enemy_image('data/images/enemys/enemy_move_4_1_r.png')
-        self.test_monster1 = Enemy((6, 4), [im1, [im3, im4, im5], [im1, im2, im13, im14]], self.din_map, -1)
+        im10 = load_enemy_image('data/images/enemys/enemy_move_1_3.png')
+        im11 = load_enemy_image('data/images/enemys/enemy_move_2_2.png')
+        im12 = load_enemy_image('data/images/enemys/enemy_move_3_2.png')
+        im13 = load_enemy_image('data/images/enemys/enemy_move_4_2.png')
+        im10r = load_enemy_image('data/images/enemys/enemy_move_1_3_r.png')
+        im11r = load_enemy_image('data/images/enemys/enemy_move_2_2_r.png')
+        im12r = load_enemy_image('data/images/enemys/enemy_move_3_2_r.png')
+        im13r = load_enemy_image('data/images/enemys/enemy_move_4_2_r.png')
+        self.test_monster1 = Enemy((6, 4), [im1, [im3, im4, im5],
+                                            [im1, im2, im3r, im4r],
+                                            [im6, im7, im8, im9],
+                                            [im6r, im7r, im8r, im9r],
+                                            [im10, im11, im12, im13],
+                                            [im10r, im11r, im12r, im13r]], self.din_map, -1)
         self.hole_points.append([self.test_monster1.cords, 10000, self.test_monster1, 1])
-        self.test_monster2 = Enemy((6, 12), [im1, [im3, im4, im5], [im1, im2]], self.din_map, -2)
+        self.test_monster2 = Enemy((6, 12), [im1, [im3, im4, im5],
+                                            [im1, im2, im3r, im4r],
+                                            [im6, im7, im8, im9],
+                                            [im6r, im7r, im8r, im9r],
+                                            [im10, im11, im12, im13],
+                                            [im10r, im11r, im12r, im13r]], self.din_map, -2)
         self.hole_points.append([self.test_monster2.cords, 10000, self.test_monster2, 1])
 
         cm = create_map(self.tecmap)
@@ -335,6 +353,17 @@ class Game:
                         point[2].texture = point[2].run_texture[point[2].run_count // 3]
                         point[2].find_path(self.camera)
                         point[2].move()
+                        this_ang = find_angle(point[2].cords, point[2].lp, self.camera)
+                        if this_ang < pi / 6:
+                            point[2].run_texture = point[2].r_90_run
+                        elif this_ang < pi / 3:
+                            point[2].run_texture = point[2].r_45_run
+                        elif this_ang < 2 * pi / 3:
+                            point[2].run_texture = point[2].f_run
+                        elif this_ang < 5 * pi / 6:
+                            point[2].run_texture = point[2].l_45_run
+                        else:
+                            point[2].run_texture = point[2].l_90_run
                         point[2].hit_count = 0
                     if point[2].hit_count >= len(point[2].hit_textures) / 2:
                         self.HP -= 10
