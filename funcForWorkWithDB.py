@@ -33,3 +33,10 @@ def updateScore(name, score):
     cur = con.cursor()
     cur.execute("UPDATE users SET score = " + str(score) + " WHERE username = '" + name + "';")
     con.commit()
+
+
+def updateTime(name, time):
+    con = sqlite3.connect('data/usersDB.db')
+    cur = con.cursor()
+    cur.execute("UPDATE users SET btime = " + str(time) + " WHERE username = '" + name + "';")
+    con.commit()
