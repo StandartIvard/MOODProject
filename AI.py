@@ -12,7 +12,7 @@ class Enemy:
     def __init__(self, cords, texture, plane, id):
         self.cur_position = cords
         self.cords = (self.cur_position[1] * 500, 0, self.cur_position[0] * 500)
-        self.texture = texture[0]
+        self.texture = texture[0][0]
         self.hit_textures = texture[1]
         self.path = (0, 0, 0)
         self.hole_textures = texture
@@ -25,6 +25,7 @@ class Enemy:
         self.r_45_run = texture[4]
         self.l_90_run = texture[5]
         self.r_90_run = texture[6]
+        self.stop_run = texture[0]
         self.lp = (0, 0, 0)
         self.run_count = 0
         self.id = id

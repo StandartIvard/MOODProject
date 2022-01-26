@@ -12,7 +12,7 @@ def find_angle(p1, p2, cam):
     try:
         cs = point1[0] / dist(point1, (0, 0, 0))
     except ZeroDivisionError:
-        return pi / 2
+        return 10
     return acos(cs)
 
 

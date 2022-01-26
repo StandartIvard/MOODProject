@@ -101,14 +101,14 @@ class Game:
         im11r = load_enemy_image('data/images/enemys/enemy_move_2_2_r.png')
         im12r = load_enemy_image('data/images/enemys/enemy_move_3_2_r.png')
         im13r = load_enemy_image('data/images/enemys/enemy_move_4_2_r.png')
-        self.test_monster1 = Enemy((6, 4), [im1, [im3, im4, im5],
+        self.test_monster1 = Enemy((6, 4), [[im5], [im3, im4, im5],
                                             [im1, im2, im3r, im4r],
                                             [im6, im7, im8, im9],
                                             [im6r, im7r, im8r, im9r],
                                             [im10, im11, im12, im13],
                                             [im10r, im11r, im12r, im13r]], self.din_map, -1)
         self.hole_points.append([self.test_monster1.cords, 10000, self.test_monster1, 1])
-        self.test_monster2 = Enemy((6, 12), [im1, [im3, im4, im5],
+        self.test_monster2 = Enemy((6, 12), [[im5], [im3, im4, im5],
                                             [im1, im2, im3r, im4r],
                                             [im6, im7, im8, im9],
                                             [im6r, im7r, im8r, im9r],
@@ -336,7 +336,9 @@ class Game:
                     point[2].plane = self.din_map
                     cur_dist = dist(point[0], self.camera.pos)
                     self.hole_points[ind][1] = cur_dist
+                    print('---')
                     point[2].draw(point[0], self.camera, self.screen)
+                    print('+++')
                     cam_pos = (self.camera.pos[0], 0, self.camera.pos[2])
                     if dist(cam_pos, point[2].cords) > 900:
                         point[2].hitting = False
@@ -353,16 +355,27 @@ class Game:
                         point[2].texture = point[2].run_texture[point[2].run_count // 3]
                         point[2].find_path(self.camera)
                         point[2].move()
+                        print('1')
                         this_ang = find_angle(point[2].cords, point[2].lp, self.camera)
+                        print('2')
                         if this_ang < pi / 6:
+                            print('11')
                             point[2].run_texture = point[2].r_90_run
                         elif this_ang < pi / 3:
+                            print('22')
                             point[2].run_texture = point[2].r_45_run
                         elif this_ang < 2 * pi / 3:
+                            print('33')
                             point[2].run_texture = point[2].f_run
                         elif this_ang < 5 * pi / 6:
+                            print('44')
                             point[2].run_texture = point[2].l_45_run
+                            print('444')
+                        elif this_ang == 10:
+                            print('55')
+                            point[2].run_texture = point[2].stop_run
                         else:
+                            print('66')
                             point[2].run_texture = point[2].l_90_run
                         point[2].hit_count = 0
                     if point[2].hit_count >= len(point[2].hit_textures) / 2:
