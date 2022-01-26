@@ -16,6 +16,7 @@ class Game:
     shooting = False
     count = 0
     indx = 1
+    name = ''
 
     playlist = [
         './data/sounds/METALMUSICONE.wav',

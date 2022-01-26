@@ -37,6 +37,7 @@ class MainMenu(QWidget):
         self.timer.start(0)
 
     def pygame_loop(self):
+        self.game.name = self.name
         if self.game.qtacess:
             result = getInformDB(self.name)
 
