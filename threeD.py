@@ -1,6 +1,7 @@
 import pygame
 from math import pi
-from py3d import Camera, size, remake_s, remake_h, remake_v, dist, polygon_center, mc, Vector, is_out, find_angle
+from py3d import Camera, size, remake_s, remake_h, remake_v, dist, polygon_center, mc,\
+    Vector, is_out, find_angle, is_inside
 from math import pi, sin, cos
 from time import time
 import sys
@@ -33,6 +34,7 @@ class Game:
         self.game_init()
 
     def game_init(self):
+        print('11')
         self.w = 0.05
         self.p1 = (0, 0, 0)
         self.p2 = (self.h, 0, 0)
@@ -48,6 +50,7 @@ class Game:
         self.clr4 = pygame.Color('white')
         self.clr5 = pygame.Color('yellow')
         self.clr6 = pygame.Color('pink')
+        self.damage = 25
         self.screen = pygame.display.set_mode((0, 0))
         W, H = self.screen.get_size()
         self.screen = pygame.display.set_mode((W, H))
@@ -63,7 +66,6 @@ class Game:
         self.screen.fill((0, 0, 0))
         self.running = True
         self.camera = Camera((2000, 800, -(3**0.5) * 200 + 1500), (2000, 800, 1500))
-        print(self.camera.cur_position)
         self.terrain = []
         self.tecmap = 'mapName'
         self.clr3 = pygame.Color((27, 0, 0))
@@ -102,19 +104,26 @@ class Game:
         im11r = load_enemy_image('data/images/enemys/enemy_move_2_2_r.png')
         im12r = load_enemy_image('data/images/enemys/enemy_move_3_2_r.png')
         im13r = load_enemy_image('data/images/enemys/enemy_move_4_2_r.png')
+        im1d = load_enemy_image('data/images/enemys/death_1.png')
+        im2d = load_enemy_image('data/images/enemys/death_2.png')
+        im3d = load_enemy_image('data/images/enemys/death_3.png')
+        im4d = load_enemy_image('data/images/enemys/death_4.png')
+        im5d = load_enemy_image('data/images/enemys/death_5.png')
         self.test_monster1 = Enemy((6, 4), [[im5], [im3, im4, im5],
                                             [im1, im2, im3r, im4r],
                                             [im6, im7, im8, im9],
                                             [im6r, im7r, im8r, im9r],
                                             [im10, im11, im12, im13],
-                                            [im10r, im11r, im12r, im13r]], self.din_map, -1)
+                                            [im10r, im11r, im12r, im13r],
+                                            [im1d, im2d, im3d, im4d, im5d]], self.din_map, -1)
         self.hole_points.append([self.test_monster1.cords, 10000, self.test_monster1, 1])
         self.test_monster2 = Enemy((6, 12), [[im5], [im3, im4, im5],
                                             [im1, im2, im3r, im4r],
                                             [im6, im7, im8, im9],
                                             [im6r, im7r, im8r, im9r],
                                             [im10, im11, im12, im13],
-                                            [im10r, im11r, im12r, im13r]], self.din_map, -2)
+                                            [im10r, im11r, im12r, im13r],
+                                            [im1d, im2d, im3d, im4d, im5d]], self.din_map, -2)
         self.hole_points.append([self.test_monster2.cords, 10000, self.test_monster2, 1])
 
         cm = create_map(self.tecmap)
@@ -122,7 +131,7 @@ class Game:
             for j in range(len(cm[i])):
                 if 0 < i < len(cm) - 1 and 0 < j < len(cm[i]) - 1 and cm[i][j] != 0:
                     print((i, j))
-
+        self.current_target = self.hole_points[0]
         self.sprites_of_hands_1 = pygame.sprite.Group()
         sprite = pygame.sprite.Sprite()
         sprite.image = load_hand_image("data/images/HandSprites/NormalHands.png")
@@ -220,10 +229,18 @@ class Game:
 
     def main_loop(self, window):
         if self.qtacess:
+            print('111')
             keys = pygame.key.get_pressed()
             if keys[pygame.K_SPACE]:
                 if not self.shooting:
                     self.shooting = True
+                    if self.current_target[3] == 1:
+                        print('1')
+                        self.current_target[2].hitpoints -= self.damage
+                        self.current_target[2].texture = self.current_target[2].death_run[0]
+                        print(self.current_target[2].hitpoints)
+                    else:
+                        print('-1')
                     pygame.mixer.Channel(1).play(pygame.mixer.Sound('./data/sounds/ShootingSound.wav'))
 
             if keys[pygame.K_w]:
@@ -332,14 +349,14 @@ class Game:
                             self.stuck_polygons.append(point[0])
                     square = mc(point[0], self.camera)
                     if square != [(1, 1), (1, 1), (1, 1), (1, 1)]:
+                        if is_inside(square, (450, 300)) == True:
+                            self.current_target = point
                         pygame.draw.polygon(self.screen, point[2], square)
                 else:
                     point[2].plane = self.din_map
                     cur_dist = dist(point[0], self.camera.pos)
                     self.hole_points[ind][1] = cur_dist
-                    print('---')
                     point[2].draw(point[0], self.camera, self.screen)
-                    print('+++')
                     cam_pos = (self.camera.pos[0], 0, self.camera.pos[2])
                     if dist(cam_pos, point[2].cords) > 900:
                         point[2].hitting = False
@@ -356,33 +373,27 @@ class Game:
                         point[2].texture = point[2].run_texture[point[2].run_count // 3]
                         point[2].find_path(self.camera)
                         point[2].move()
-                        print('1')
                         this_ang = find_angle(point[2].cords, point[2].lp, self.camera)
-                        print('2')
                         if this_ang < pi / 6:
-                            print('11')
                             point[2].run_texture = point[2].r_90_run
                         elif this_ang < pi / 3:
-                            print('22')
                             point[2].run_texture = point[2].r_45_run
                         elif this_ang < 2 * pi / 3:
-                            print('33')
                             point[2].run_texture = point[2].f_run
                         elif this_ang < 5 * pi / 6:
-                            print('44')
                             point[2].run_texture = point[2].l_45_run
-                            print('444')
                         elif this_ang == 10:
-                            print('55')
                             point[2].run_texture = point[2].stop_run
                         else:
-                            print('66')
                             point[2].run_texture = point[2].l_90_run
                         point[2].hit_count = 0
                     if point[2].hit_count >= len(point[2].hit_textures) / 2:
                         self.HP -= 10
                     point[0] = point[2].cords
                     self.din_map = point[2].plane
+                    screen_pos = mc(point[2].cords, self.camera)
+                    if 400 <= screen_pos[1] <= 500:
+                        self.current_target = point
             if self.shooting:
                 if self.count == 13:
                     self.count = 0

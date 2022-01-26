@@ -4,6 +4,37 @@ size = [1440, 900] #1440 900
 CENTER = (size[0] / 2, size[1] / 2, 0)
 
 
+def is_inside(pol, p):
+    try:
+        k1 = (pol[0][1] - pol[1][1]) / (pol[0][0] - pol[1][0])
+        n1 = pol[0][1] - k1 * pol[0][0]
+    except ZeroDivisionError:
+        k1 = 1000000000000
+        n1 = pol[0][1] - k1 * pol[0][0]
+    try:
+        k2 = (pol[2][1] - pol[3][1]) / (pol[2][0] - pol[3][0])
+        n2 = pol[2][1] - k2 * pol[2][0]
+    except ZeroDivisionError:
+        k2 = 1000000000000
+        n2 = pol[2][1] - k2 * pol[2][0]
+    try:
+        k3 = (pol[0][1] - pol[3][1]) / (pol[0][0] - pol[3][0])
+        n3 = pol[0][1] - k3 * pol[0][0]
+    except ZeroDivisionError:
+        k3 = 1000000000000
+        n3 = pol[0][1] - k3 * pol[0][0]
+    try:
+        k4 = (pol[2][1] - pol[1][1]) / (pol[2][0] - pol[1][0])
+        n4 = pol[2][1] - k4 * pol[2][0]
+    except ZeroDivisionError:
+        k4 = 1000000000000
+        n4 = pol[2][1] - k4 * pol[2][0]
+    if (k1 * p[0] + n1 > 0 and k2 * p[0] + n2 < 0) or (k1 * p[0] + n1 < 0 and k2 * p[0] + n2 > 0):
+        if (k3 * p[0] + n3 > 0 and k4 * p[0] + n4 < 0) or (k3 * p[0] + n3 < 0 and k4 * p[0] + n4 > 0):
+            return True
+    return False
+
+
 def find_angle(p1, p2, cam):
     point1 = (p1[0] - p2[0], 0, p1[2] - p2[2])
     point1 = remake_v(point1, -cam.ang_v, (0, 0, 0))
