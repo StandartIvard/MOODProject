@@ -35,23 +35,10 @@ class Game:
         pygame.init()
         self.game_init()
 
+
     def game_init(self):
         print('11')
         self.w = 0.05
-        self.p1 = (0, 0, 0)
-        self.p2 = (self.h, 0, 0)
-        self.p3 = (self.h, 0, self.h)
-        self.p4 = (0, 0, self.h)
-        self.p5 = (0, self.h, 0)
-        self.p6 = (self.h, self.h, 0)
-        self.p7 = (self.h, self.h, self.h)
-        self.p8 = (0, self.h, self.h)
-        self.clr1 = pygame.Color('red')
-        self.clr2 = pygame.Color('green')
-        self.clr3 = pygame.Color('blue')
-        self.clr4 = pygame.Color('white')
-        self.clr5 = pygame.Color('yellow')
-        self.clr6 = pygame.Color('pink')
         self.damage = 25
         self.screen = pygame.display.set_mode((0, 0))
         W, H = self.screen.get_size()
@@ -67,9 +54,10 @@ class Game:
 
         self.screen.fill((0, 0, 0))
         self.running = True
-        self.camera = Camera((2000, 800, -(3**0.5) * 200 + 1500), (2000, 800, 1500))
+        self.camera = Camera((3000, 800, -(3**0.5) * 200 + 1500), (3000, 800, 1500))
         self.terrain = []
-        self.tecmap = 'mapName'
+        self.tecmap = 'level1_map'
+        self.tecmap2 = 'level2_map'
         self.clr3 = pygame.Color((27, 0, 0))
         cur_map = translateMap(self.tecmap, self.camera, self.clr3)
         self.plane_map = []
@@ -111,28 +99,19 @@ class Game:
         im3d = load_enemy_image('data/images/enemys/death_3.png')
         im4d = load_enemy_image('data/images/enemys/death_4.png')
         im5d = load_enemy_image('data/images/enemys/death_5.png')
-        self.test_monster1 = Enemy((6, 4), [[im5], [im3, im4, im5],
+        self.monster_sprites = [[im5], [im3, im4, im5],
                                             [im1, im2, im3r, im4r],
                                             [im6, im7, im8, im9],
                                             [im6r, im7r, im8r, im9r],
                                             [im10, im11, im12, im13],
                                             [im10r, im11r, im12r, im13r],
-                                            [im1d, im2d, im3d, im4d, im5d]], self.din_map, -1)
+                                            [im1d, im2d, im3d, im4d, im5d]]
+        self.test_monster1 = Enemy((6, 4), self.monster_sprites, self.din_map, -1)
         self.hole_points.append([self.test_monster1.cords, 10000, self.test_monster1, 1])
-        self.test_monster2 = Enemy((6, 12), [[im5], [im3, im4, im5],
-                                            [im1, im2, im3r, im4r],
-                                            [im6, im7, im8, im9],
-                                            [im6r, im7r, im8r, im9r],
-                                            [im10, im11, im12, im13],
-                                            [im10r, im11r, im12r, im13r],
-                                            [im1d, im2d, im3d, im4d, im5d]], self.din_map, -2)
+        self.test_monster2 = Enemy((6, 12), self.monster_sprites, self.din_map, -2)
         self.hole_points.append([self.test_monster2.cords, 10000, self.test_monster2, 1])
-
+        self.is_on_second_level = True
         cm = create_map(self.tecmap)
-        for i in range(len(cm)):
-            for j in range(len(cm[i])):
-                if 0 < i < len(cm) - 1 and 0 < j < len(cm[i]) - 1 and cm[i][j] != 0:
-                    print((i, j))
         self.current_target = self.hole_points[0]
         self.sprites_of_hands_1 = pygame.sprite.Group()
         sprite = pygame.sprite.Sprite()
@@ -221,6 +200,27 @@ class Game:
                            self.sprites_of_hands_2, self.sprites_of_hands_1]
         print(len(self.plane_map))
 
+    def second_level_change(self):
+        self.camera = Camera((3000, 800, -(3**0.5) * 200 + 1500), (3000, 800, 1500))
+        cur_map = translateMap(self.tecmap2, self.camera, self.clr3)
+        self.din_map = create_map(self.tecmap2)
+        monster1 = Enemy((3, 4), self.monster_sprites, self.din_map, -1)
+        monster2 = Enemy((3, 15), self.monster_sprites, self.din_map, -2)
+        monster3 = Enemy((8, 4), self.monster_sprites, self.din_map, -3)
+        monster4 = Enemy((8, 15), self.monster_sprites, self.din_map, -4)
+        self.din_map[3][4] = -1
+        self.din_map[3][15] = -2
+        self.din_map[8][4] = -3
+        self.din_map[8][15] = -4
+        self.hole_points = []
+        self.hole_points.append([monster1.cords, 10000, monster1, 1])
+        self.hole_points.append([monster2.cords, 10000, monster2, 1])
+        self.hole_points.append([monster3.cords, 10000, monster3, 1])
+        self.hole_points.append([monster4.cords, 10000, monster4, 1])
+        self.plane_map = []
+        self.plane_map.extend(cur_map)
+        self.hole_points.extend(self.plane_map)
+
     def draw_te(self, surf, text, size, x, y):
         font_name = pygame.font.match_font('arial')
         font = pygame.font.Font(font_name, size)
@@ -231,6 +231,9 @@ class Game:
 
     def main_loop(self, window):
         if self.qtacess:
+            if self. is_on_second_level == True:
+                self.second_level_change()
+                self.is_on_second_level = False
             keys = pygame.key.get_pressed()
             if keys[pygame.K_SPACE]:
                 if not self.shooting:
