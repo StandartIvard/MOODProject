@@ -38,8 +38,11 @@ def updateScore(name, score):
 def updateTime(name, time):
     con = sqlite3.connect('data/usersDB.db')
     cur = con.cursor()
+    print('11')
     cur.execute("UPDATE users SET btime = " + str(time) + " WHERE username = '" + name + "';")
+    print('22')
     con.commit()
+    print('33')
 
 
 def getTime():

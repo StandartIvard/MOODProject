@@ -252,6 +252,7 @@ class Game:
                             self.current_target[2].death = True
                             self.score += 1
                             updateScore(self.name, self.score)
+                            self.currend_target = self.hole_points[0]
                     pygame.mixer.Channel(1).play(pygame.mixer.Sound('./data/sounds/ShootingSound.wav'))
 
             if keys[pygame.K_w]:
@@ -466,9 +467,12 @@ class Game:
             if temp == len(self.monster_list):
                 self.seclvl = True
                 if self.level == 2 and self.ended == False:
+                    print('0')
                     self.timer = time() - self.timer
                     self.ended = True
-                    updateTime(self.name, round(self.timer, 3))
+                    print('1')
+                    updateTime(self.name, self.timer)
+                    print('2')
 
 
             pygame.display.flip()
