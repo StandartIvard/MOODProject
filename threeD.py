@@ -78,12 +78,21 @@ class Game:
         self.din_map = create_map(self.tecmap)
         self.din_map[6][4] = -1
         self.din_map[6][12] = -2
-        im1 = load_enemy_image('data/images/alien_test.png')
-        im2 = load_enemy_image('data/images/alien_test_hit1.png')
-        im3 = load_enemy_image('data/images/alien_test_hit2.png')
-        self.test_monster1 = Enemy((6, 4), [im1, im2, im3, im2], self.din_map, -1)
+        im1 = load_enemy_image('data/images/enemys/enemy_move_1.png')
+        im2 = load_enemy_image('data/images/enemys/enemy_move_2.png')
+        im13 = load_enemy_image('data/images/enemys/enemy_move_3.png')
+        im14 = load_enemy_image('data/images/enemys/enemy_move_4.png')
+        im3 = load_enemy_image('data/images/enemys/enemy_move_5.png')
+        im4 = load_enemy_image('data/images/enemys/enemy_move_6.png')
+        im5 = load_enemy_image('data/images/enemys/enemy_move_7.png')
+        im6 = load_enemy_image('data/images/enemys/enemy_move_1_2.png')
+        im7 = load_enemy_image('data/images/enemys/enemy_move_2_1.png')
+        im8 = load_enemy_image('data/images/enemys/enemy_move_3_1.png')
+        im9 = load_enemy_image('data/images/enemys/enemy_move_4_1.png')
+        imr6 = im6.
+        self.test_monster1 = Enemy((6, 4), [im1, [im3, im4, im5], [im1, im2, im13, im14]], self.din_map, -1)
         self.hole_points.append([self.test_monster1.cords, 10000, self.test_monster1, 1])
-        self.test_monster2 = Enemy((6, 12), [im1, im2, im3, im2], self.din_map, -2)
+        self.test_monster2 = Enemy((6, 12), [im1, [im3, im4, im5], [im1, im2]], self.din_map, -2)
         self.hole_points.append([self.test_monster2.cords, 10000, self.test_monster2, 1])
 
         cm = create_map(self.tecmap)
@@ -318,7 +327,9 @@ class Game:
                         point[2].texture = point[2].hit_textures[point[2].hit_count // 2]
                         point[2].hit_count += 1
                     else:
-                        point[2].texture = point[2].hole_textures[0]
+                        point[2].run_count += 1
+                        point[2].run_count %= 3 * len(point[2].run_texture)
+                        point[2].texture = point[2].run_texture[point[2].run_count // 3]
                         point[2].find_path(self.camera)
                         point[2].move()
                         point[2].hit_count = 0

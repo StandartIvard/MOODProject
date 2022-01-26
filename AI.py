@@ -13,12 +13,19 @@ class Enemy:
         self.cur_position = cords
         self.cords = (self.cur_position[1] * 500, 0, self.cur_position[0] * 500)
         self.texture = texture[0]
-        self.hit_textures = texture[1:]
+        self.hit_textures = texture[1]
         self.path = (0, 0, 0)
         self.hole_textures = texture
         self.plane = plane
         self.next_pos = self.cur_position
         self.size = self.texture.get_rect().size
+        self.run_texture = texture[2]
+        self.f_run = texture[2]
+        self.l_45_run = texture[3]
+        self.r_45_run = texture[4]
+        self.l_90run = texture[5]
+        self.r_90_run = texture[6]
+        self.run_count = 0
         self.id = id
         self.hitting = False
         self.hit_counter = 0
@@ -28,7 +35,7 @@ class Enemy:
         bn = (100, 100)
         for i in [-1, 0, 1]:
             for j in [-1, 0, 1]:
-                next_cords = (self.cords[0] + i * 50, 0, self.cords[2] + j * 50)
+                next_cords = (self.cords[0] + i * 75, 0, self.cords[2] + j * 75)
                 if self.plane[next_cords[2] // 500][next_cords[0] // 500] == 0 or self.plane[next_cords[2] // 500][next_cords[0] // 500] == self.id:
                     if manh_dist(target.cur_position, (self.cur_position[0] + j, self.cur_position[1] + i)) < manh_dist((self.cur_position[0] + next_pos[0], self.cur_position[1] + next_pos[1]), target.cur_position):
                             next_pos = (j, i)
@@ -39,7 +46,7 @@ class Enemy:
         self.plane[self.cur_position[0]][self.cur_position[1]] = 0
         v1 = Vector((self.next_pos[1], 0, self.next_pos[0]))
         v2 = Vector((self.cur_position[1], 0, self.cur_position[0]))
-        mv = Vector((self.next_pos[1], 0, self.next_pos[0])) * 25
+        mv = Vector((self.next_pos[1], 0, self.next_pos[0])) * 50
         self.cords = (self.cords[0] + mv[0], self.cords[1] + mv[1], self.cords[2] + mv[2])
         self.cur_position = (self.cords[2] // 500, self.cords[0] // 500)
         self.plane[self.cur_position[0]][self.cur_position[1]] = self.id
