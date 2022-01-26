@@ -230,7 +230,7 @@ class resultDialog(QDialog):
         loadUi(".//data/dialogForResult.ui", self)
 
         res = getTime()
-        res = sorted(res, key=lambda num: int(num[2]), reverse=True)
+        res = sorted(res, key=lambda num: int(num[2]))
         self.tableWidget.setColumnCount(3)
         self.tableWidget.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)
 
