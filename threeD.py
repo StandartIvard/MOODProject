@@ -5,7 +5,7 @@ from py3d import Camera, size, remake_s, remake_h, remake_v, dist, polygon_cente
 from math import pi, sin, cos
 from time import time
 import sys
-from funcForWorkWithDB import updateHP, updateScore
+from funcForWorkWithDB import updateHP, updateScore, updateTime
 from funcForMap import translateMap, create_map
 from loadImage import load_hand_image, load_enemy_image
 from AI import Enemy
@@ -39,16 +39,18 @@ class Game:
 
     def game_init(self):
         self.HP = 100
+        updateHP(self.name, self.HP)
         updateHP(self.name, 100)
-        print('11')
+        self.timer = time()
+        self.ended = False
         self.w = 0.05
-        self.damage = 25
+        self.damage = 100
         self.screen = pygame.display.set_mode((0, 0))
         W, H = self.screen.get_size()
         self.screen = pygame.display.set_mode((W, H))
         global size
         size = (W, H)
-
+        self.level = 1
         self.HP = 100
         self.score = 0
 
@@ -206,6 +208,7 @@ class Game:
     def second_level_change(self):
         self.camera = Camera((3000, 800, -(3**0.5) * 200 + 1500), (3000, 800, 1500))
         cur_map = translateMap(self.tecmap2, self.camera, self.clr3)
+        self.level = 2
         self.din_map = create_map(self.tecmap2)
         monster1 = Enemy((3, 4), self.monster_sprites, self.din_map, -1)
         monster2 = Enemy((3, 15), self.monster_sprites, self.din_map, -2)
@@ -358,7 +361,7 @@ class Game:
                             self.stuck_polygons.append(point[0])
                     square = mc(point[0], self.camera)
                     if square != [(1, 1), (1, 1), (1, 1), (1, 1)]:
-                        if is_inside(square, (450, 300)) == True:
+                        if is_inside(square, (450, 300)) == True and point[0][0][1] != point[0][1][1]:
                             self.current_target = point
                         pygame.draw.polygon(self.screen, point[2], square)
                 else:
@@ -413,8 +416,9 @@ class Game:
                     point[0] = point[2].cords
                     self.din_map = point[2].plane
                     screen_pos = mc(point[2].cords, self.camera)
-                    if (size[0] - t_size[0]) // 2 <= screen_pos[0] <= (size[0] + t_size[0]) // 2:
-                        self.current_target = point
+                    if (size[0] - t_size[0]) // 2 + 50 <= screen_pos[0] <= (size[0] + t_size[0]) // 2 - 50:
+                        if point[2].hitpoints > 0:
+                            self.current_target = point
             if self.shooting:
                 if self.count == 13:
                     self.count = 0
@@ -462,6 +466,11 @@ class Game:
                     temp += 1
             if temp == len(self.monster_list):
                 self.seclvl = True
+                if self.level == 2 and self.ended == False:
+                    self.timer = time() - self.timer
+                    self.ended = True
+                    updateHP(self.name, round(self.timer, 3))
+
 
             pygame.display.flip()
             self.screen.fill((0, 0, 0))
