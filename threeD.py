@@ -252,6 +252,7 @@ class Game:
                             self.current_target[2].death = True
                             self.score += 1
                             updateScore(self.name, self.score)
+                            self.current_target = self.hole_points[0]
                     pygame.mixer.Channel(1).play(pygame.mixer.Sound('./data/sounds/ShootingSound.wav'))
 
             if keys[pygame.K_w]:
