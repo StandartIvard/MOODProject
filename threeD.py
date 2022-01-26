@@ -363,7 +363,7 @@ class Game:
                         point[2].texture = point[2].death_run[point[2].death_count]
                     if point[2].death_count >= 4:
                         point[2].death = False
-                    point[2].draw(point[0], self.camera, self.screen)
+                    t_size = point[2].draw(point[0], self.camera, self.screen)
                     if point[2].hitpoints <= 0:
                         continue
                     if 0 < point[2].stunned < 4:
@@ -379,12 +379,12 @@ class Game:
                     else:
                         point[2].hitting = True
                     if point[2].hitting == True:
-                        point[2].texture = point[2].hit_textures[point[2].hit_count // 2]
+                        point[2].texture = point[2].hit_textures[point[2].hit_count // 4]
                         point[2].hit_count += 1
                     else:
                         point[2].run_count += 1
-                        point[2].run_count %= 3 * len(point[2].run_texture)
-                        point[2].texture = point[2].run_texture[point[2].run_count // 3]
+                        point[2].run_count %= 5 * len(point[2].run_texture)
+                        point[2].texture = point[2].run_texture[point[2].run_count // 5]
                         point[2].find_path(self.camera)
                         point[2].move()
                         this_ang = find_angle(point[2].cords, point[2].lp, self.camera)
@@ -402,11 +402,11 @@ class Game:
                             point[2].run_texture = point[2].l_90_run
                         point[2].hit_count = 0
                     if point[2].hit_count >= len(point[2].hit_textures) / 2:
-                        self.HP -= 10
+                        self.HP -= 5
                     point[0] = point[2].cords
                     self.din_map = point[2].plane
                     screen_pos = mc(point[2].cords, self.camera)
-                    if size[0] // 2 - 100 <= screen_pos[0] <= size[0] // 2 + 100:
+                    if (size[0] - t_size[0]) // 2 <= screen_pos[0] <= (size[0] + t_size[0]) // 2:
                         self.current_target = point
             if self.shooting:
                 if self.count == 13:

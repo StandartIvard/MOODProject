@@ -62,7 +62,7 @@ class Enemy:
     def draw(self, pos, cam, screen):
         pol_c = (pos[0], pos[1] + self.texture.get_height() / 2, pos[2])
         if mc(pol_c, cam) == (-1, -1):
-            return None
+            return (0, 0)
         cur_p = (pol_c[0] - cam.pos[0], pol_c[1] - cam.pos[1], pol_c[2] - cam.pos[2])
         cur_p = remake_v(cur_p, -cam.ang_v, (0, 0, 0))
         cur_p = remake_h(cur_p, -cam.ang_h, (0, 0, 0))
@@ -70,7 +70,7 @@ class Enemy:
         if mc(pol_c, cam) != (-1, -1):
             coef = cam.cur_field[2] / cur_p[2]
         else:
-            return None
+            return (0, 0)
         w = self.texture.get_width()
         h = self.texture.get_height()
         w *= coef
@@ -84,3 +84,4 @@ class Enemy:
         group = pygame.sprite.Group()
         group.add(cur_sprite)
         group.draw(screen)
+        return (w, h)
