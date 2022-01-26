@@ -240,8 +240,6 @@ class Game:
                         self.current_target[2].stunned = 1
                         if self.current_target[2].hitpoints <= 0 and self.current_target[2].hitpoints + self.damage > 0:
                             self.current_target[2].death = True
-                    else:
-                        print('-1')
                     pygame.mixer.Channel(1).play(pygame.mixer.Sound('./data/sounds/ShootingSound.wav'))
 
             if keys[pygame.K_w]:
