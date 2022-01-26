@@ -5,7 +5,7 @@ from py3d import Camera, size, remake_s, remake_h, remake_v, dist, polygon_cente
 from math import pi, sin, cos
 from time import time
 import sys
-from funcForWorkWithDB import updateHP
+from funcForWorkWithDB import updateHP, updateScore
 from funcForMap import translateMap, create_map
 from loadImage import load_hand_image, load_enemy_image
 from AI import Enemy
@@ -241,6 +241,8 @@ class Game:
                         self.current_target[2].stunned = 1
                         if self.current_target[2].hitpoints <= 0 and self.current_target[2].hitpoints + self.damage > 0:
                             self.current_target[2].death = True
+                            self.score += 1
+                            updateScore(self.name, self.score)
                     pygame.mixer.Channel(1).play(pygame.mixer.Sound('./data/sounds/ShootingSound.wav'))
 
             if keys[pygame.K_w]:
@@ -416,6 +418,7 @@ class Game:
             updateHP(self.name, self.HP)
             if self.HP == 0:
                 self.dead = True
+                self.qtacess = False
             self.handGroups[self.count].draw(self.screen)
             self.scope.draw(self.screen)
             #            ---------------------------------------------------------------

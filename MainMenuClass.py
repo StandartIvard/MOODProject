@@ -3,7 +3,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUi
-from funcForWorkWithDB import getInformDB, insertUserDB, updatePassword
+from funcForWorkWithDB import getInformDB, insertUserDB, updatePassword, updateHP
 from uniAlertDialog import alertDialog
 from passwordChangeDialog import passwordDialog
 
@@ -30,7 +30,8 @@ class MainMenu(QWidget):
 
         self.init_pygame(game)
 
-        self.secondForm = deadScreen(self.game)
+        self.secondForm = SecondMenu(self.game)
+        self.deathScreen = deadScreen(self.game)
 
     def init_pygame(self, game):
         self.game = game
@@ -39,6 +40,7 @@ class MainMenu(QWidget):
         self.timer.start(0)
 
     def pygame_loop(self):
+        self.deathScreen.name = self.name
         self.game.name = self.name
         if self.game.qtacess:
             result = getInformDB(self.name)
@@ -47,16 +49,25 @@ class MainMenu(QWidget):
             self.game.score = result[0][2]
         if self.game.main_loop(self):
             self.close()
-        if self.game.pause:
-            #self.secondForm.name = self.name
+        if self.game.pause and not self.game.dead:
+            self.secondForm.name = self.name
             self.secondForm.show()
-            #self.secondForm.label.setText("Имя персонажа: " + self.secondForm.name)
-            #self.secondForm.label_2.setText("Очков: " + str(self.secondForm.score))
-        if self.secondForm.cont:
+            self.secondForm.label.setText("Имя персонажа: " + self.secondForm.name)
+            self.secondForm.label_2.setText("Очков: " + str(self.secondForm.score))
+        if self.secondForm.cont or self.deathScreen.cont:
             self.game.pause = False
+
             self.secondForm.cont = False
+            self.deathScreen.cont = False
+
             self.game.qtacess = True
+            self.game.dead = False
+
+            self.deathScreen.hide()
             self.secondForm.hide()
+        if self.game.dead:
+            self.deathScreen.show()
+            self.game.pause = True
 
     def play(self):
         name = self.lineEdit.text()
@@ -153,9 +164,10 @@ class SecondMenu(QWidget):
 class deadScreen(QWidget):
 
     def __init__(self, game, parent=None):
+        self.game = game
         super().__init__(parent)
-        loadUi(".//data/winScreen.ui", self)
-        oImage = QImage("data/images/background_win_screen.jpg")
+        loadUi(".//data/deadScreen.ui", self)
+        oImage = QImage("data/images/deathBackground.jpg")
         sImage = oImage.scaled(QSize(1429, 450))
         palette = QPalette()
         palette.setBrush(10, QBrush(sImage))
@@ -170,3 +182,5 @@ class deadScreen(QWidget):
 
     def next(self):
         self.cont = True
+        self.game.HP = 100
+        updateHP(self.name, 100)
