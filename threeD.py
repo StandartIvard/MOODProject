@@ -462,7 +462,6 @@ class Game:
                     temp += 1
             if temp == len(self.monster_list):
                 self.seclvl = True
-                self.qtacess = False
 
             pygame.display.flip()
             self.screen.fill((0, 0, 0))

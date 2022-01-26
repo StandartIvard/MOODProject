@@ -213,5 +213,4 @@ class winScreen(QWidget):
     def nextLevel(self):
         self.game.is_on_second_level = True
         self.hide()
-        self.game.qtacess = True
         self.game.seclvl = False
