@@ -154,8 +154,8 @@ class deadScreen(QWidget):
 
     def __init__(self, game, parent=None):
         super().__init__(parent)
-        loadUi(".//data/deadScreen.ui", self)
-        oImage = QImage("data/images/deathBackground.jpg")
+        loadUi(".//data/winScreen.ui", self)
+        oImage = QImage("data/images/background_win_screen.jpg")
         sImage = oImage.scaled(QSize(1429, 450))
         palette = QPalette()
         palette.setBrush(10, QBrush(sImage))
