@@ -3,7 +3,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUi
-from funcForWorkWithDB import getInformDB, insertUserDB, updatePassword, updateHP
+from funcForWorkWithDB import getInformDB, insertUserDB, updatePassword, updateHP, getTime
 from uniAlertDialog import alertDialog
 from passwordChangeDialog import passwordDialog
 
@@ -76,6 +76,10 @@ class MainMenu(QWidget):
 
         if self.game.seclvl:
             self.WinScreen.show()
+
+        if self.game.ended:
+            self.resDialog = resultDialog()
+            self.resDialog.exec_()
 
     def play(self):
         name = self.lineEdit.text()
@@ -214,3 +218,20 @@ class winScreen(QWidget):
         self.game.is_on_second_level = True
         self.hide()
         self.game.seclvl = False
+
+
+class resultDialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        loadUi(".//data/dialogForResult.ui", self)
+
+        res = getTime()
+        res = sorted(res, key=lambda num: num[2], reverse=True)
+        self.tableWidget.setColumnCount(3)
+
+        for i, row in enumerate(res):
+            self.tableWidget.setRowCount(
+                self.tableWidget.rowCount() + 1)
+            for j, elem in enumerate(row):
+                self.tableWidget.setItem(
+                    i, j, QTableWidgetItem(str(elem)))

@@ -469,7 +469,7 @@ class Game:
                 if self.level == 2 and self.ended == False:
                     self.timer = time() - self.timer
                     self.ended = True
-                    updateHP(self.name, round(self.timer, 3))
+                    updateTime(self.name, round(self.timer, 3))
 
 
             pygame.display.flip()

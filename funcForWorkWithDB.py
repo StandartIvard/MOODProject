@@ -40,3 +40,9 @@ def updateTime(name, time):
     cur = con.cursor()
     cur.execute("UPDATE users SET btime = " + str(time) + " WHERE username = '" + name + "';")
     con.commit()
+
+
+def getTime():
+    con = sqlite3.connect('data/usersDB.db')
+    cur = con.cursor()
+    cur.execute("SELECT name, score, btime FROM users")
