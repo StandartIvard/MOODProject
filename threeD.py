@@ -24,7 +24,7 @@ class Game:
 
     pygame.mixer.init()
     pygame.mixer.Channel(0).play(pygame.mixer.Sound('./data/sounds/METALMUSICONE.wav'))
-    pygame.mixer.Channel(0).set_volume(0.5)
+    pygame.mixer.Channel(0).set_volume(0)
     pygame.mixer.Channel(0).queue(pygame.mixer.Sound('./data/sounds/METALMUSICTWO.wav'))
 
     def __init__(self):
