@@ -140,7 +140,7 @@ class Game:
         sprite.rect = sprite.image.get_rect()
         self.sprites_of_hands_1.add(sprite)
         sprite.rect.x = self.LR - 20
-        sprite.rect.y = self.UD - 40
+        sprite.rect.y = self.UD
 
         self.sprites_of_hands_2 = pygame.sprite.Group()
         sprite = pygame.sprite.Sprite()
@@ -148,7 +148,7 @@ class Game:
         sprite.rect = sprite.image.get_rect()
         self.sprites_of_hands_2.add(sprite)
         sprite.rect.x = self.LR - 20
-        sprite.rect.y = self.UD - 40
+        sprite.rect.y = self.UD
 
         self.sprites_of_hands_3 = pygame.sprite.Group()
         sprite = pygame.sprite.Sprite()
@@ -156,7 +156,7 @@ class Game:
         sprite.rect = sprite.image.get_rect()
         self.sprites_of_hands_3.add(sprite)
         sprite.rect.x = self.LR - 20
-        sprite.rect.y = self.UD - 40
+        sprite.rect.y = self.UD
 
         self.sprites_of_hands_4 = pygame.sprite.Group()
         sprite = pygame.sprite.Sprite()
@@ -164,7 +164,7 @@ class Game:
         sprite.rect = sprite.image.get_rect()
         self.sprites_of_hands_4.add(sprite)
         sprite.rect.x = self.LR - 20
-        sprite.rect.y = self.UD - 40
+        sprite.rect.y = self.UD
 
         self.sprites_of_hands_5 = pygame.sprite.Group()
         sprite = pygame.sprite.Sprite()
@@ -172,7 +172,7 @@ class Game:
         sprite.rect = sprite.image.get_rect()
         self.sprites_of_hands_5.add(sprite)
         sprite.rect.x = self.LR - 20
-        sprite.rect.y = self.UD - 40
+        sprite.rect.y = self.UD
 
         self.sprites_of_hands_6 = pygame.sprite.Group()
         sprite = pygame.sprite.Sprite()
@@ -180,7 +180,7 @@ class Game:
         sprite.rect = sprite.image.get_rect()
         self.sprites_of_hands_6.add(sprite)
         sprite.rect.x = self.LR - 20
-        sprite.rect.y = self.UD - 40
+        sprite.rect.y = self.UD
 
         self.sprites_of_hands_7 = pygame.sprite.Group()
         sprite = pygame.sprite.Sprite()
@@ -188,7 +188,7 @@ class Game:
         sprite.rect = sprite.image.get_rect()
         self.sprites_of_hands_7.add(sprite)
         sprite.rect.x = self.LR - 20
-        sprite.rect.y = self.UD - 40
+        sprite.rect.y = self.UD
 
         self.sprites_of_hands_8 = pygame.sprite.Group()
         sprite = pygame.sprite.Sprite()
@@ -196,7 +196,7 @@ class Game:
         sprite.rect = sprite.image.get_rect()
         self.sprites_of_hands_8.add(sprite)
         sprite.rect.x = self.LR - 20
-        sprite.rect.y = self.UD - 40
+        sprite.rect.y = self.UD
 
         self.scope = pygame.sprite.Group()
         sprite = pygame.sprite.Sprite()
@@ -212,7 +212,7 @@ class Game:
         sprite.rect = sprite.image.get_rect()
         self.scope.add(sprite)
         sprite.rect.x = -1 * (510 - self.LR)
-        sprite.rect.y = -1 * (240 - self.UD + 50)
+        sprite.rect.y = -1 * (240 - self.UD)
 
         self.handGroups = [self.sprites_of_hands_1, self.sprites_of_hands_2, self.sprites_of_hands_3,
                            self.sprites_of_hands_4, self.sprites_of_hands_5, self.sprites_of_hands_6,
