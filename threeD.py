@@ -38,6 +38,8 @@ class Game:
 
 
     def game_init(self):
+        self.HP = 100
+        updateHP(self.name, 100)
         print('11')
         self.w = 0.05
         self.damage = 25

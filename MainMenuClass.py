@@ -190,8 +190,7 @@ class deadScreen(QWidget):
 
     def next(self):
         self.cont = True
-        self.game.HP = 100
-        updateHP(self.name, 100)
+        self.game.game_init()
 
 
 class winScreen(QWidget):
