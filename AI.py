@@ -33,6 +33,8 @@ class Enemy:
         self.run_count = 0
         self.id = id
         self.hitting = False
+        self.death = False
+        self.death_count = -1
         self.hit_counter = 0
 
     def find_path(self, target):

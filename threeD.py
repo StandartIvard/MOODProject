@@ -238,7 +238,8 @@ class Game:
                         self.current_target[2].hitpoints -= self.damage
                         self.current_target[2].texture = self.current_target[2].death_run[0]
                         self.current_target[2].stunned = 1
-                        print(self.current_target[2].hitpoints)
+                        if self.current_target[2].hitpoints <= 0 and self.current_target[2].hitpoints + self.damage > 0:
+                            self.current_target[2].death = True
                     else:
                         print('-1')
                     pygame.mixer.Channel(1).play(pygame.mixer.Sound('./data/sounds/ShootingSound.wav'))
@@ -356,7 +357,14 @@ class Game:
                     point[2].plane = self.din_map
                     cur_dist = dist(point[0], self.camera.pos)
                     self.hole_points[ind][1] = cur_dist
+                    if point[2].death == True:
+                        point[2].death_count += 1
+                        point[2].texture = point[2].death_run[point[2].death_count]
+                    if point[2].death_count >= 4:
+                        point[2].death = False
                     point[2].draw(point[0], self.camera, self.screen)
+                    if point[2].hitpoints <= 0:
+                        continue
                     if 0 < point[2].stunned < 4:
                         point[2].stunned += 1
                         continue
@@ -405,9 +413,8 @@ class Game:
                     self.shooting = False
                 else:
                     self.count += self.indx
-            print('1')
+            self.HP = max(self.HP, 0)
             updateHP(self.name, self.HP)
-            print('2')
             self.handGroups[self.count].draw(self.screen)
             self.scope.draw(self.screen)
             #            ---------------------------------------------------------------
