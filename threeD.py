@@ -110,6 +110,7 @@ class Game:
         self.hole_points.append([self.test_monster1.cords, 10000, self.test_monster1, 1])
         self.test_monster2 = Enemy((6, 12), self.monster_sprites, self.din_map, -2)
         self.hole_points.append([self.test_monster2.cords, 10000, self.test_monster2, 1])
+        self.monster_list = [self.test_monster2, self.test_monster1]
         self.is_on_second_level = False
         cm = create_map(self.tecmap)
         self.current_target = self.hole_points[0]
@@ -207,6 +208,7 @@ class Game:
         monster2 = Enemy((3, 15), self.monster_sprites, self.din_map, -2)
         monster3 = Enemy((8, 4), self.monster_sprites, self.din_map, -3)
         monster4 = Enemy((8, 15), self.monster_sprites, self.din_map, -4)
+        self.monster_list = [monster4, monster3, monster1, monster2]
         self.din_map[3][4] = -1
         self.din_map[3][15] = -2
         self.din_map[8][4] = -3
