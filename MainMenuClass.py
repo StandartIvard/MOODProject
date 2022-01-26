@@ -32,6 +32,7 @@ class MainMenu(QWidget):
 
         self.secondForm = SecondMenu(self.game)
         self.deathScreen = deadScreen(self.game)
+        self.WinScreen = winScreen(self.game)
 
     def init_pygame(self, game):
         self.game = game
@@ -47,13 +48,16 @@ class MainMenu(QWidget):
 
             self.game.HP = result[0][3]
             self.game.score = result[0][2]
+
         if self.game.main_loop(self):
             self.close()
+
         if self.game.pause and not self.game.dead:
             self.secondForm.name = self.name
             self.secondForm.show()
             self.secondForm.label.setText("Имя персонажа: " + self.secondForm.name)
             self.secondForm.label_2.setText("Очков: " + str(self.secondForm.score))
+
         if self.secondForm.cont or self.deathScreen.cont:
             self.game.pause = False
 
@@ -65,9 +69,13 @@ class MainMenu(QWidget):
 
             self.deathScreen.hide()
             self.secondForm.hide()
+
         if self.game.dead:
             self.deathScreen.show()
             self.game.pause = True
+
+        if self.game.seclvl:
+            self.WinScreen.show()
 
     def play(self):
         name = self.lineEdit.text()
@@ -184,3 +192,27 @@ class deadScreen(QWidget):
         self.cont = True
         self.game.HP = 100
         updateHP(self.name, 100)
+
+
+class winScreen(QWidget):
+
+    def __init__(self, game, parent=None):
+        self.game = game
+        super().__init__(parent)
+        loadUi(".//data/winScreen.ui", self)
+        oImage = QImage("data/images/background_win_screen.jpg")
+        sImage = oImage.scaled(QSize(1429, 450))
+        palette = QPalette()
+        palette.setBrush(10, QBrush(sImage))
+        self.setPalette(palette)
+
+        self.name = ""
+        self.score = 0
+
+        self.pushButton.clicked.connect(self.nextLevel)
+
+    def nextLevel(self):
+        self.game.is_on_second_level = True
+        self.hide()
+        self.game.qtacess = True
+        self.game.seclvl = False

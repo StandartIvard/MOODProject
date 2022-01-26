@@ -20,6 +20,7 @@ class Game:
     indx = 1
     name = ''
     dead = False
+    seclvl = False
 
     playlist = [
         './data/sounds/METALMUSICONE.wav',
@@ -232,7 +233,7 @@ class Game:
 
     def main_loop(self, window):
         if self.qtacess:
-            if self. is_on_second_level == True:
+            if self.is_on_second_level == True:
                 self.second_level_change()
                 self.is_on_second_level = False
             keys = pygame.key.get_pressed()
@@ -453,6 +454,13 @@ class Game:
             self.draw_te(self.screen, str(self.score), 100, (size[0] / 2) + size[0] / 5, size[1] - self.UD - 20)
 
             self.sides.draw(self.screen)
+            temp = 0
+            for i in self.monster_list:
+                if i.hitpoints <= 0:
+                    temp += 1
+            if temp == len(self.monster_list):
+                self.seclvl = True
+                self.qtacess = False
 
             pygame.display.flip()
             self.screen.fill((0, 0, 0))
