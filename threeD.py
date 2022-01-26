@@ -410,7 +410,6 @@ class Game:
             print('2')
             self.handGroups[self.count].draw(self.screen)
             self.scope.draw(self.screen)
-
             #            ---------------------------------------------------------------
             #                       INTERFACE
             #            ---------------------------------------------------------------
