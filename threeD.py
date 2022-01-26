@@ -19,6 +19,7 @@ class Game:
     count = 0
     indx = 1
     name = ''
+    dead = False
 
     playlist = [
         './data/sounds/METALMUSICONE.wav',
@@ -413,6 +414,8 @@ class Game:
                     self.count += self.indx
             self.HP = max(self.HP, 0)
             updateHP(self.name, self.HP)
+            if self.HP == 0:
+                self.dead = True
             self.handGroups[self.count].draw(self.screen)
             self.scope.draw(self.screen)
             #            ---------------------------------------------------------------
