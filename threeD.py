@@ -39,7 +39,6 @@ class Game:
 
     def game_init(self):
         self.HP = 100
-        updateHP(self.name, self.HP)
         updateHP(self.name, 100)
         self.timer = time()
         self.ended = False

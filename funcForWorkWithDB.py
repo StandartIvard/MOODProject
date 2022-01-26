@@ -45,4 +45,4 @@ def updateTime(name, time):
 def getTime():
     con = sqlite3.connect('data/usersDB.db')
     cur = con.cursor()
-    cur.execute("SELECT name, score, btime FROM users")
+    return cur.execute("SELECT username, score, btime FROM users").fetchall()

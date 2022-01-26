@@ -1,6 +1,7 @@
 import sys
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUi
 from funcForWorkWithDB import getInformDB, insertUserDB, updatePassword, updateHP, getTime
@@ -226,8 +227,9 @@ class resultDialog(QDialog):
         loadUi(".//data/dialogForResult.ui", self)
 
         res = getTime()
-        res = sorted(res, key=lambda num: num[2], reverse=True)
+        res = sorted(res, key=lambda num: int(num[2]), reverse=True)
         self.tableWidget.setColumnCount(3)
+        self.tableWidget.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)
 
         for i, row in enumerate(res):
             self.tableWidget.setRowCount(
