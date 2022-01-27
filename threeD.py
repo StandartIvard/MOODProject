@@ -43,7 +43,7 @@ class Game:
         self.timer = time()
         self.ended = False
         self.w = 0.05
-        self.damage = 100
+        self.damage = 50
         self.screen = pygame.display.set_mode((0, 0))
         W, H = self.screen.get_size()
         self.screen = pygame.display.set_mode((W, H))
