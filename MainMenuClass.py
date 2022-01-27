@@ -22,7 +22,6 @@ class MainMenu(QWidget):
         palette = QPalette()
         palette.setBrush(10, QBrush(sImage))
         self.setPalette(palette)
-        self.show()
 
         self.pushButton_2.clicked.connect(self.play)
         self.pushButton_3.clicked.connect(self.register)
@@ -35,6 +34,9 @@ class MainMenu(QWidget):
         self.secondForm = SecondMenu(self.game)
         self.deathScreen = deadScreen(self.game)
         self.WinScreen = winScreen(self.game)
+        self.win = secondWinScreen(self.game)
+
+        self.show()
 
     def init_pygame(self, game):
         self.game = game
@@ -80,10 +82,16 @@ class MainMenu(QWidget):
             self.WinScreen.show()
 
         if self.game.ended:
-            self.resDialog = resultDialog()
-            self.resDialog.exec_()
-            sys.exit()
+            self.win.show()
 
+        if self.win.end:
+            print("ok")
+            self.game.game_init()
+            self.game.qtacess = False
+            self.win.end = False
+            self.win.hide()
+            self.game.seclvl = False
+            self.show()
 
     def play(self):
         name = self.lineEdit.text()
@@ -240,3 +248,36 @@ class resultDialog(QDialog):
             for j, elem in enumerate(row):
                 self.tableWidget.setItem(
                     i, j, QTableWidgetItem(str(elem)))
+
+
+class secondWinScreen(QWidget):
+
+    def __init__(self, game, parent=None):
+        self.game = game
+        super().__init__(parent)
+        loadUi(".//data/secondWin.ui", self)
+        oImage = QImage("data/images/secondWinScreen.png")
+        sImage = oImage.scaled(QSize(1429, 450))
+        palette = QPalette()
+        palette.setBrush(10, QBrush(sImage))
+        self.setPalette(palette)
+
+        self.name = ""
+        self.score = 0
+
+        self.pushButton.clicked.connect(self.menuReturn)
+        self.pushButton_2.clicked.connect(self.close)
+        self.pushButton_3.clicked.connect(self.results)
+
+        self.end = False
+
+    def results(self):
+        self.resDialog = resultDialog()
+        self.resDialog.exec_()
+
+    def close(self):
+        sys.exit()
+
+    def menuReturn(self):
+        self.hide()
+        self.end = True

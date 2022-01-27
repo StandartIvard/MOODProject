@@ -52,6 +52,7 @@ class Game:
         self.level = 1
         self.HP = 100
         self.score = 0
+        self.seclvl = False
 
         self.LR = (W - 900) // 2
         self.UD = (H - 600) // 2
@@ -465,7 +466,8 @@ class Game:
                 if i.hitpoints <= 0:
                     temp += 1
             if temp == len(self.monster_list):
-                self.seclvl = True
+                if self.level == 1:
+                    self.seclvl = True
                 if self.level == 2 and self.ended == False:
                     self.timer = time() - self.timer
                     self.ended = True
