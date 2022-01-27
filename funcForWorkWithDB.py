@@ -10,7 +10,7 @@ def getInformDB(name):
 def insertUserDB(name, password):
     con = sqlite3.connect('data/usersDB.db')
     cur = con.cursor()
-    cur.execute("INSERT INTO users VALUES('" + name + "','" + password + "', 0)")
+    cur.execute("INSERT INTO users VALUES('" + name + "','" + password + "', 0, 100, 1000)")
     con.commit()
 
 
